@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg">
+<nav class="navbar navbar-expand-lg shadow-lg">
     <a class="navbar-brand" href="#">
         <img
             src="https://brademar.com/wp-content/uploads/2022/10/The-Coffee-House-Logo-PNG-2.png"
@@ -19,11 +19,16 @@
     </button>
     <div class="address-container">
         <div class="shipment-container">
-            <img />
+            <img
+                src="https://minio.thecoffeehouse.com/image/admin/1677755165_freeship-web.jpg"
+            />
         </div>
         <div class="address">
-            <h1></h1>
-            <p></p>
+            <h1>Giao hàng</h1>
+            <p>{{ address }}</p>
+        </div>
+        <div class="address-arrow">
+            <i class="fa-solid fa-arrow-down"></i>
         </div>
     </div>
     <div class="collapse navbar-collapse" id="navbarNav">
@@ -44,6 +49,19 @@
             </li>
         </ul>
     </div>
-    <div class="customer-image-container"></div>
-    <div class="cart-container"></div>
+    <div class="customer-image-container">
+        <img [src]="userImage" />
+        <p>{{ name }}</p>
+    </div>
+    <button
+        type="button"
+        class="btn btn-primary position-relative cart-container"
+    >
+        <i class="fa-solid fa-bag-shopping"></i>
+        <span
+            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+        >
+            {{ cartLength }}
+        </span>
+    </button>
 </nav>
