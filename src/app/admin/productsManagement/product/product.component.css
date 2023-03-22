@@ -1,0 +1,100 @@
+::-webkit-scrollbar {
+    display: none;
+}
+.title-chip {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+}
+.prod-title-container h5.price {
+    font-size: 18px;
+}
+.prod-title-container h5 {
+    margin: 0;
+    text-align: end;
+    padding: 6px 10px;
+    border-radius: 4px;
+    background-color: var(--light-primary);
+    color: white;
+}
+.prod-title-container h4 {
+    font-size: 18px;
+}
+.btn {
+    font-size: 12px;
+}
+.btn.edit {
+    border: 3px solid white;
+    background-color: var(--light-secondary);
+}
+.btn.delete {
+    border: 3px solid white;
+    background-color: var(--primary);
+}
+
+.btn.edit:hover {
+    color: white;
+    background-color: var(--secondary);
+}
+.btn.delete:hover {
+    color: white;
+    background-color: var(--light-primary);
+}
+.product-card {
+    z-index: 1;
+    cursor: pointer;
+    transition: all 0.1s ease-in-out;
+    top: 0;
+}
+.product-card .prod-title-container h4 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+.product-card .description-container {
+    height: 100px;
+    overflow-y: scroll; /* Hides any overflow beyond the element */
+    text-overflow: ellipsis; /* Adds an ellipsis (...) to indicate overflow */
+    white-space: nowrap;
+}
+.product-card .card-text {
+    white-space: pre-wrap; /* Prevents text from wrapping */
+}
+.product-card:hover {
+    transform: scale(1.01);
+    top: -12px;
+}
+#updateProductForm .mat-mdc-form-field {
+    width: 100%;
+}
+#ProductEdit .modal-dialog {
+    max-width: 100% !important;
+    width: 800px !important;
+}
+/* FILE UPLOAD */
+.dropzone {
+    border: 3px dashed black;
+    height: 300px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.dropzone .text-wrapper {
+    text-align: center;
+}
+.image-preview {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.image-preview img {
+    width: 300px;
+    height: 300px;
+    object-fit: contain;
+}

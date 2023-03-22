@@ -1,0 +1,48 @@
+<header>
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">THE COFFEE HOUSE</a>
+            <a class="navbar-user" routerLink="">
+                {{ currentUser.name }}
+                <i class="fa-solid fa-user"></i>
+            </a>
+        </div>
+    </nav>
+    <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse">
+        <div class="position-sticky h-100">
+            <div class="list-group list-group-flush mx-3 mt-4">
+                <a
+                    routerLink="/admin/account-mgmt"
+                    href="#"
+                    class="list-group-item list-group-item-action py-2 ripple"
+                    aria-current="true"
+                >
+                    <i class="fa-solid fa-users"></i>
+                </a>
+                <a
+                    routerLink="/admin/product-mgmt"
+                    href="#"
+                    class="list-group-item list-group-item-action py-2 ripple"
+                    aria-current="true"
+                >
+                    <i class="fa-solid fa-mug-saucer"></i>
+                </a>
+                <a
+                    href="#"
+                    class="list-group-item list-group-item-action py-2 ripple"
+                    aria-current="true"
+                    routerLink="/admin/order-mgmt"
+                >
+                    <i class="fa-solid fa-receipt"></i>
+                </a>
+                <a
+                    href="#"
+                    class="list-group-item list-group-item-action py-2 ripple"
+                    aria-current="true"
+                >
+                    <i class="fa-solid fa-percent"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>

@@ -1,0 +1,192 @@
+<div class="row mt-5">
+    <div class="col d-none d-md-block">
+        <h1 class="section-title">Units</h1>
+    </div>
+    <div class="col">
+        <div class="input-group">
+            <button
+                class="btn btn-outline-secondary me-3"
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#UnitEdit"
+                (click)="handleAdd()"
+            >
+                Add
+                <i class="fa-sharp fa-solid fa-plus"></i>
+            </button>
+            <button (click)="refresh()" class="btn btn-outline-secondary">
+                <i class="fa-solid fa-arrows-rotate"></i>
+            </button>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <ng-container [ngSwitch]="loading">
+        <div class="table-responsive" *ngSwitchCase="false">
+            <table class="table table-striped shadow-lg border">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let unit of unitsPaginated
+                                | paginate
+                                    : {
+                                          id: 'unit-paginate',
+                                          itemsPerPage: pageSize,
+                                          currentPage: page,
+                                          totalItems: total
+                                      }
+                        "
+                    >
+                        <td scope="col">{{ unit.id }}</td>
+                        <td scope="col">{{ unit.name }}</td>
+                        <td scope="col">
+                            {{ unit.price | currency : 'VND' }}
+                        </td>
+
+                        <td>
+                            <div class="actions-container">
+                                <button
+                                    (click)="handleEdit(unit)"
+                                    class="btn edit"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#UnitEdit"
+                                >
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <button
+                                    class="btn delete"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#ToppingDelete"
+                                    (click)="setSelectedDelete(unit)"
+                                >
+                                    <i class="fa-sharp fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <ng-container *ngSwitchCase="true">
+            <div class="d-flex w-100 mt-5 mb-5 justify-content-center">
+                <mat-progress-spinner
+                    diameter="50"
+                    mode="indeterminate"
+                ></mat-progress-spinner>
+            </div>
+        </ng-container>
+    </ng-container>
+</div>
+<div *ngIf="!loading" class="row">
+    <div class="col">
+        Showed
+        {{ (pageSize + 1) * page > total ? total % pageSize : pageSize }}
+        results
+    </div>
+    <div class="col">
+        <pagination-controls
+            id="unit-paginate"
+            (pageChange)="page = $event"
+        ></pagination-controls>
+    </div>
+</div>
+
+<!--Edit Modal -->
+<div
+    class="modal fade"
+    id="UnitEdit"
+    tabindex="-1"
+    aria-labelledby="UnitEditLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="UnitEditLabel">Update Unit</h1>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                    #closemodalbutton
+                ></button>
+            </div>
+            <div class="modal-body">
+                <form
+                    id="updateForm"
+                    [formGroup]="updateForm"
+                    (ngSubmit)="submitForm()"
+                >
+                    <fieldset [disabled]="isSubmitting">
+                        <!-- NAME -->
+                        <div class="update-field-container">
+                            <h1>Name</h1>
+                            <mat-form-field>
+                                <mat-label>Name</mat-label>
+                                <input
+                                    type="text"
+                                    matInput
+                                    formControlName="name"
+                                />
+                                <mat-error
+                                    *ngIf="
+                                        updateForm.controls['name'].hasError(
+                                            'required'
+                                        )
+                                    "
+                                >
+                                    Name cannot be empty
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="update-field-container">
+                            <h1>Price</h1>
+                            <!-- PHONE -->
+                            <mat-form-field>
+                                <mat-label>Price</mat-label>
+                                <input
+                                    matInput
+                                    type="text"
+                                    formControlName="price"
+                                />
+                                <mat-error
+                                    *ngIf="
+                                        updateForm.controls['price'].hasError(
+                                            'required'
+                                        ) ||
+                                        updateForm.controls['price'].hasError(
+                                            'pattern'
+                                        )
+                                    "
+                                >
+                                    Invalid Price
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button
+                    #closebutton
+                    type="button"
+                    class="btn"
+                    data-bs-dismiss="modal"
+                >
+                    Close
+                </button>
+                <button type="button" (click)="submitForm()" class="btn">
+                    Save changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

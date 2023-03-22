@@ -1,0 +1,297 @@
+<div class="row mt-5">
+    <div class="col d-none d-md-block">
+        <h1 class="section-title">Toppings</h1>
+    </div>
+    <div class="col">
+        <div class="input-group">
+            <button
+                class="btn btn-outline-secondary me-3"
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#ToppingEdit"
+                (click)="handleAdd()"
+            >
+                Add
+                <i class="fa-sharp fa-solid fa-plus"></i>
+            </button>
+            <button
+                class="btn btn-outline-secondary"
+                type="button"
+                id="button-addon1"
+                (click)="ngOnInit()"
+            >
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+            <input
+                [(ngModel)]="name"
+                type="text"
+                class="form-control"
+                placeholder=""
+            />
+            <button (click)="refresh()" class="btn btn-outline-secondary">
+                <i class="fa-solid fa-arrows-rotate"></i>
+            </button>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <ng-container [ngSwitch]="loading">
+        <div class="table-responsive" *ngSwitchCase="false">
+            <table class="table table-striped shadow-lg border">
+                <thead>
+                    <tr>
+                        <th
+                            [class.active]="sortBy === 'id'"
+                            (click)="setSortBy('id')"
+                            scope="col"
+                        >
+                            ID<span [hidden]="reverse">▼</span
+                            ><span [hidden]="!reverse">▲</span>
+                        </th>
+                        <th
+                            [class.active]="sortBy === 'name'"
+                            (click)="setSortBy('name')"
+                            scope="col"
+                        >
+                            Name <span [hidden]="reverse">▼</span
+                            ><span [hidden]="!reverse">▲</span>
+                        </th>
+                        <th
+                            [class.active]="sortBy === 'price'"
+                            (click)="setSortBy('price')"
+                            scope="col"
+                        >
+                            Price <span [hidden]="reverse">▼</span
+                            ><span [hidden]="!reverse">▲</span>
+                        </th>
+                        <th
+                            [class.active]="sortBy === 'createdAt'"
+                            (click)="setSortBy('createdAt')"
+                            scope="col"
+                        >
+                            Created At <span [hidden]="reverse">▼</span
+                            ><span [hidden]="!reverse">▲</span>
+                        </th>
+                        <th
+                            [class.active]="sortBy === 'updatedAt'"
+                            (click)="setSortBy('updatedAt')"
+                            scope="col"
+                        >
+                            Updated At <span [hidden]="reverse">▼</span
+                            ><span [hidden]="!reverse">▲</span>
+                        </th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="
+                            let topping of toppingsPaginated
+                                | paginate
+                                    : {
+                                          id: 'topping-paginate',
+                                          itemsPerPage: pageSize,
+                                          currentPage: pageNo,
+                                          totalItems: total
+                                      }
+                        "
+                    >
+                        <td scope="col">{{ topping.id }}</td>
+                        <td scope="col">{{ topping.name }}</td>
+                        <td scope="col">
+                            {{ topping.price | currency : 'VND' }}
+                        </td>
+                        <td scope="col">
+                            {{ topping.createdAt | date : 'dd/MM/YYYY' }}
+                        </td>
+                        <td scope="col">
+                            {{ topping.updatedAt | date : 'dd/MM/YYYY' }}
+                        </td>
+
+                        <td>
+                            <div class="actions-container">
+                                <button
+                                    (click)="handleEdit(topping)"
+                                    class="btn edit"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#ToppingEdit"
+                                >
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <button
+                                    class="btn delete"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#ToppingDelete"
+                                    (click)="setSelectedDelete(topping)"
+                                >
+                                    <i class="fa-sharp fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <ng-container *ngSwitchCase="true">
+            <div class="d-flex w-100 mt-5 mb-5 justify-content-center">
+                <mat-progress-spinner
+                    diameter="50"
+                    mode="indeterminate"
+                ></mat-progress-spinner>
+            </div>
+        </ng-container>
+    </ng-container>
+</div>
+<div *ngIf="!loading" class="row">
+    <div class="col">Showed {{ numberOfResults }} results</div>
+    <div class="col">
+        <pagination-controls
+            id="topping-paginate"
+            (pageChange)="getPage($event)"
+        ></pagination-controls>
+    </div>
+</div>
+
+<!--Edit Modal -->
+<div
+    class="modal fade"
+    id="ToppingEdit"
+    tabindex="-1"
+    aria-labelledby="ToppingEditLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="ToppingEditLabel">
+                    Update Topping
+                </h1>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                    #closemodalbutton
+                ></button>
+            </div>
+            <div class="modal-body">
+                <form
+                    id="updateForm"
+                    [formGroup]="updateForm"
+                    (ngSubmit)="submitForm()"
+                >
+                    <fieldset [disabled]="isSubmitting">
+                        <!-- NAME -->
+                        <div class="update-field-container">
+                            <h1>Name</h1>
+                            <mat-form-field>
+                                <mat-label>Name</mat-label>
+                                <input
+                                    type="text"
+                                    matInput
+                                    formControlName="name"
+                                />
+                                <mat-error
+                                    *ngIf="
+                                        updateForm.controls['name'].hasError(
+                                            'required'
+                                        )
+                                    "
+                                >
+                                    Name cannot be empty
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="update-field-container">
+                            <h1>Price</h1>
+                            <!-- PHONE -->
+                            <mat-form-field>
+                                <mat-label>Price</mat-label>
+                                <input
+                                    matInput
+                                    type="text"
+                                    formControlName="price"
+                                />
+                                <mat-error
+                                    *ngIf="
+                                        updateForm.controls['price'].hasError(
+                                            'required'
+                                        ) ||
+                                        updateForm.controls['price'].hasError(
+                                            'pattern'
+                                        )
+                                    "
+                                >
+                                    Invalid Price
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button
+                    #closebutton
+                    type="button"
+                    class="btn"
+                    data-bs-dismiss="modal"
+                >
+                    Close
+                </button>
+                <button type="button" (click)="submitForm()" class="btn">
+                    Save changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Delete Modal -->
+<div
+    class="modal fade"
+    id="ToppingDelete"
+    tabindex="-1"
+    aria-labelledby="ToppingDeleteLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="ToppingDeleteLabel">
+                    Delete Account
+                </h1>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                    #closedeletemodal
+                ></button>
+            </div>
+            <div class="modal-body">
+                Are you sure to delete account
+                <strong>#{{ selectedDelete?.id }}</strong> with topping's name:
+                {{ selectedDelete?.name }} ? This will be removed
+                <strong>permanently</strong>.
+            </div>
+            <div class="modal-footer">
+                <button
+                    #closebuttonedit
+                    type="button"
+                    class="btn"
+                    data-bs-dismiss="modal"
+                >
+                    Cancel
+                </button>
+                <button
+                    #closebuttondelete
+                    type="button"
+                    (click)="deleteTopping()"
+                    class="btn delte-btn"
+                >
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

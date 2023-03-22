@@ -1,0 +1,228 @@
+<admin-header></admin-header>
+<main class="order-management-container">
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col d-none d-md-block">
+                <h1 class="section-title">ORDERS MANAGEMENT</h1>
+            </div>
+            <div class="col">
+                <div class="input-group filter-container">
+                    <button
+                        class="btn btn-outline-secondary me-3"
+                        type="button"
+                        (click)="add()"
+                    >
+                        Add
+                        <i class="fa-sharp fa-solid fa-plus"></i>
+                    </button>
+                    <button
+                        class="btn btn-outline-secondary me-3"
+                        type="button"
+                        (click)="ngOnInit()"
+                    >
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                    <mat-form-field
+                        class="customer-select me-3"
+                        appearance="fill"
+                    >
+                        <mat-label>Customer</mat-label>
+                        <mat-select
+                            [formControl]="searchCustomerControl"
+                            [value]="searchCustomerControl.value"
+                        >
+                            <mat-option
+                                [value]="customer.id"
+                                *ngFor="let customer of customers"
+                            >
+                                {{ customer.user.name }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <button
+                        (click)="refresh()"
+                        class="btn btn-outline-secondary"
+                    >
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <ng-container [ngSwitch]="loading">
+                <ng-container *ngSwitchCase="true">
+                    <div class="d-flex w-100 mt-5 mb-5 justify-content-center">
+                        <div class="overlay">
+                            <div class="overlay__inner">
+                                <div class="overlay__content">
+                                    <span class="spinner"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="false">
+                    <div
+                        class="col col-lg-3 col-sm-6 col-md-4"
+                        *ngFor="
+                            let order of orders
+                                | paginate
+                                    : {
+                                          id: 'orders-pagin',
+                                          itemsPerPage: pageSize,
+                                          currentPage: pageNo,
+                                          totalItems: total
+                                      }
+                        "
+                    >
+                        <div class="card order-card shadow">
+                            <img
+                                src="https://theme.hstatic.net/1000075078/1000989727/14/share_fb_home.png?v=49"
+                                class="card-img-top"
+                                alt="error"
+                            />
+                            <div class="card-body">
+                                <div class="order-title-container">
+                                    <div>
+                                        <div class="first-line">
+                                            <p class="price">
+                                                {{
+                                                    order.tongtien || 0
+                                                        | currency : 'VND'
+                                                }}
+                                            </p>
+                                            <p class="status">
+                                                {{ order.status | titlecase }}
+                                            </p>
+                                        </div>
+                                        <div class="customer-container">
+                                            <h5>
+                                                {{
+                                                    order?.customer?.user
+                                                        ?.name +
+                                                        ' # ' +
+                                                        order?.customer?.id
+                                                }}
+                                            </h5>
+                                            <div class="customer-image">
+                                                <img
+                                                    [src]="
+                                                        'http://localhost:8080/api/v1/customer/image/' +
+                                                        order?.customer?.id
+                                                    "
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="description-container">
+                                    <div class="description-field">
+                                        <h1>ID</h1>
+                                        <p class="card-text">
+                                            #{{ order?.id }}
+                                        </p>
+                                    </div>
+                                    <div class="description-field">
+                                        <h1>Address</h1>
+                                        <p class="card-text">
+                                            {{ order?.address }}
+                                        </p>
+                                    </div>
+                                    <div class="description-field">
+                                        <h1>Delivery Time</h1>
+                                        <p class="card-text">
+                                            {{
+                                                order?.deliveryTime
+                                                    | date
+                                                        : 'hh:mm - dd/MM/yyyy'
+                                            }}
+                                        </p>
+                                    </div>
+                                    <div class="description-field">
+                                        <h1>Note</h1>
+                                        <p class="card-text">
+                                            {{ order?.note || 'No note given' }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <a
+                                    href="#"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#ProductEdit"
+                                    class="btn edit"
+                                    (click)="edit(order)"
+                                    >Edit</a
+                                >
+                                <a
+                                    href="#"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#OrderDelete"
+                                    class="btn delete"
+                                    (click)="setSelectedDelete(order)"
+                                    >Delete</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </div>
+        <div *ngIf="!loading" class="row mt-4">
+            <div class="col">Showed {{ numberOfResults }} results</div>
+            <div class="col">
+                <pagination-controls
+                    id="orders-pagin"
+                    (pageChange)="getPage($event)"
+                ></pagination-controls>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!--Delete Modal -->
+<div
+    class="modal fade"
+    id="OrderDelete"
+    tabindex="-1"
+    aria-labelledby="OrderDeleteLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="OrderDeleteLabel">
+                    Delete Order
+                </h1>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                    #closebuttondelete
+                ></button>
+            </div>
+            <div class="modal-body">
+                Are you sure to delete order
+                <strong>#{{ selectedDelete?.id }}</strong> This will be removed
+                <strong>permanently</strong>.
+            </div>
+            <div class="modal-footer">
+                <button
+                    #closebuttonedit
+                    type="button"
+                    class="btn"
+                    data-bs-dismiss="modal"
+                >
+                    Cancel
+                </button>
+                <button
+                    type="button"
+                    (click)="deleteOrder()"
+                    class="btn delte-btn"
+                >
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

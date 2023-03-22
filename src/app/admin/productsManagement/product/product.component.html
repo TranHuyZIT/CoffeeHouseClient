@@ -1,0 +1,386 @@
+<div class="product-container mt-5">
+    <div class="row">
+        <div class="col d-none d-md-block">
+            <h1 class="section-title">PRODUCTS</h1>
+        </div>
+        <div class="col">
+            <div class="input-group">
+                <button
+                    class="btn btn-outline-secondary me-3"
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#ProductEdit"
+                    (click)="add()"
+                >
+                    Add
+                    <i class="fa-sharp fa-solid fa-plus"></i>
+                </button>
+                <button
+                    class="btn btn-outline-secondary"
+                    type="button"
+                    id="button-addon1"
+                    (click)="search()"
+                >
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+                <input
+                    [(ngModel)]="name"
+                    type="text"
+                    class="form-control"
+                    placeholder=""
+                />
+                <button (click)="refresh()" class="btn btn-outline-secondary">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <ng-container [ngSwitch]="loading">
+            <ng-container *ngSwitchCase="true">
+                <div class="d-flex w-100 mt-5 mb-5 justify-content-center">
+                    <mat-progress-spinner
+                        diameter="50"
+                        mode="indeterminate"
+                    ></mat-progress-spinner>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="false">
+                <div
+                    class="col col-lg-3 col-sm-6 col-md-4"
+                    *ngFor="
+                        let product of products
+                            | paginate
+                                : {
+                                      id: 'products-pagin',
+                                      itemsPerPage: pageSize,
+                                      currentPage: pageNo,
+                                      totalItems: total
+                                  }
+                    "
+                >
+                    <div class="card product-card shadow">
+                        <img
+                            [src]="
+                                'http://localhost:8080/api/v1/product/image/' +
+                                product.id
+                            "
+                            class="card-img-top"
+                            alt="error"
+                        />
+                        <div class="card-body">
+                            <div class="prod-title-container">
+                                <div class="title-chip">
+                                    <p class="price">
+                                        {{ product.price | currency : 'VND' }}
+                                    </p>
+                                    <h5>
+                                        {{ product.productCategory.name }}
+                                    </h5>
+                                </div>
+                                <h4>{{ product.name }}</h4>
+                            </div>
+                            <div class="description-container">
+                                <p class="card-text">
+                                    {{ product.description }}
+                                </p>
+                            </div>
+                            <a
+                                href="#"
+                                data-bs-toggle="modal"
+                                data-bs-target="#ProductEdit"
+                                class="btn edit"
+                                (click)="edit(product)"
+                                >Edit</a
+                            >
+                            <a href="#" class="btn delete">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </ng-container>
+    </div>
+    <div *ngIf="!loading" class="row mt-4">
+        <div class="col">Showed {{ numberOfResults }} results</div>
+        <div class="col">
+            <pagination-controls
+                id="products-pagin"
+                (pageChange)="getPage($event)"
+            ></pagination-controls>
+        </div>
+    </div>
+</div>
+
+<!--Edit Modal -->
+<div
+    class="modal fade"
+    id="ProductEdit"
+    tabindex="-1"
+    aria-labelledby="ProductEditLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="ProductEditLabel">
+                    {{ modalType | titlecase }} Product Category
+                </h1>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                    #closeupdateform
+                ></button>
+            </div>
+            <div class="modal-body">
+                <form
+                    id="updateProductForm"
+                    [formGroup]="updateForm"
+                    (ngSubmit)="submitForm()"
+                >
+                    <fieldset [disabled]="isSubmitting">
+                        <div class="row">
+                            <!-- Name -->
+                            <div class="col-6">
+                                <div class="update-field-container">
+                                    <div class="d-none d-lg-block">
+                                        <h1>Name</h1>
+                                    </div>
+                                    <mat-form-field>
+                                        <mat-label>Product Name</mat-label>
+                                        <input
+                                            type="text"
+                                            matInput
+                                            formControlName="name"
+                                        />
+                                        <mat-error
+                                            *ngIf="
+                                                updateForm.controls[
+                                                    'name'
+                                                ].hasError('required')
+                                            "
+                                        >
+                                            Name cannot be empty
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <!-- Category -->
+                            <div class="col-6">
+                                <div class="update-field-container">
+                                    <div class="d-none d-lg-block">
+                                        <h1>Category</h1>
+                                    </div>
+                                    <mat-form-field appearance="fill">
+                                        <mat-label>Category</mat-label>
+                                        <mat-select
+                                            formControlName="productCategoryId"
+                                            [value]="
+                                                updateForm.get(
+                                                    'productCategoryId'
+                                                )?.value
+                                            "
+                                        >
+                                            <mat-option
+                                                *ngFor="
+                                                    let cate of categoriesOptions
+                                                "
+                                                [value]="cate.id"
+                                            >
+                                                {{
+                                                    cate.name | titlecase
+                                                }}</mat-option
+                                            >
+                                        </mat-select>
+                                        <mat-error
+                                            *ngIf="
+                                                updateForm.controls[
+                                                    'productCategoryId'
+                                                ].hasError('required')
+                                            "
+                                        >
+                                            Category cannot be empty
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <!-- Price -->
+                            <div class="col-6">
+                                <div class="update-field-container">
+                                    <div class="d-none d-lg-block">
+                                        <h1>Price</h1>
+                                    </div>
+                                    <mat-form-field>
+                                        <mat-label>Price</mat-label>
+                                        <input
+                                            type="text"
+                                            matInput
+                                            formControlName="price"
+                                        />
+                                        <mat-error
+                                            *ngIf="
+                                                updateForm.controls[
+                                                    'price'
+                                                ].hasError('min')
+                                            "
+                                        >
+                                            Price cannot be smaller than 0
+                                        </mat-error>
+                                        <mat-error
+                                            *ngIf="
+                                                updateForm.controls[
+                                                    'price'
+                                                ].hasError('required')
+                                            "
+                                        >
+                                            Price cannot be empty
+                                        </mat-error>
+                                        <mat-error
+                                            *ngIf="
+                                                updateForm.controls[
+                                                    'price'
+                                                ].hasError('pattern')
+                                            "
+                                        >
+                                            Invalid value for price
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <!-- Description -->
+                            <div class="col-6">
+                                <div class="update-field-container">
+                                    <div class="d-none d-lg-block">
+                                        <h1>Description</h1>
+                                    </div>
+                                    <mat-form-field>
+                                        <mat-label>Description</mat-label>
+                                        <input
+                                            type="text"
+                                            matInput
+                                            formControlName="description"
+                                        />
+                                        <mat-error
+                                            *ngIf="
+                                                updateForm.controls[
+                                                    'description'
+                                                ].hasError('required')
+                                            "
+                                        >
+                                            Description cannot be empty
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <!-- Toppings -->
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <mat-chip-listbox>
+                                            <mat-chip
+                                                (removed)="
+                                                    removeToppingChip(topping)
+                                                "
+                                                *ngFor="
+                                                    let topping of chipToppings
+                                                "
+                                            >
+                                                {{ topping.name | titlecase }}
+                                                <button matChipRemove>
+                                                    <i
+                                                        class="fa-solid fa-xmark"
+                                                    ></i>
+                                                </button>
+                                            </mat-chip>
+                                        </mat-chip-listbox>
+                                    </div>
+                                    <div class="col-6">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Topping</mat-label>
+                                            <mat-select
+                                                (valueChange)="
+                                                    addToppingChip($event)
+                                                "
+                                            >
+                                                <mat-option
+                                                    *ngFor="
+                                                        let topping of toppingsOptions
+                                                    "
+                                                    [value]="topping.id"
+                                                >
+                                                    {{
+                                                        topping.name | titlecase
+                                                    }}</mat-option
+                                                >
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Image -->
+                            <div class="update-field-container">
+                                <div
+                                    class="flex-column d-flex justify-content-center"
+                                >
+                                    <h1 class="d-none d-lg-block">Image</h1>
+                                    <button
+                                        (click)="changeImage()"
+                                        type="button"
+                                        class="btn"
+                                    >
+                                        Change Image
+                                    </button>
+                                </div>
+                                <div
+                                    *ngIf="!files.length && !previewImage"
+                                    class="rmpm dropzone"
+                                    appDrag
+                                    (files)="filesDropped($event)"
+                                >
+                                    <div class="text-wrapper">
+                                        <div class="centered">
+                                            Drop your image here!
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    class="image-preview"
+                                    *ngFor="let file of files"
+                                >
+                                    <img
+                                        *ngIf="file"
+                                        [src]="file.url"
+                                        width="100px"
+                                        height="100px"
+                                    />
+                                </div>
+                                <div *ngIf="previewImage" class="image-preview">
+                                    <img
+                                        [src]="previewImage"
+                                        alt="error"
+                                        width="100px"
+                                        height="100px"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button
+                    #closebutton
+                    type="button"
+                    class="btn"
+                    data-bs-dismiss="modal"
+                >
+                    Close
+                </button>
+                <button type="button" (click)="submitForm()" class="btn">
+                    Save changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

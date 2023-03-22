@@ -1,0 +1,243 @@
+<div class="product-category-container mt-5">
+    <div class="row">
+        <div class="col d-none d-md-block">
+            <h1 class="section-title">PRODUCT CATEGORIES</h1>
+        </div>
+        <div class="col">
+            <div class="input-group">
+                <button
+                    class="btn btn-outline-secondary me-3"
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#ProductCategoryEdit"
+                    (click)="add()"
+                >
+                    Add
+                    <i class="fa-sharp fa-solid fa-plus"></i>
+                </button>
+                <button
+                    class="btn btn-outline-secondary"
+                    type="button"
+                    id="button-addon1"
+                    (click)="search()"
+                >
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+                <input
+                    [(ngModel)]="name"
+                    type="text"
+                    class="form-control"
+                    placeholder=""
+                />
+                <button (click)="refresh()" class="btn btn-outline-secondary">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <ng-container [ngSwitch]="loading">
+            <div class="table-responsive" *ngSwitchCase="false">
+                <table class="table table-striped shadow-lg border">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Image</th>
+                            <th scope="col">Created At</th>
+                            <th scope="col">Updated At</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            *ngFor="
+                                let cate of categories
+                                    | paginate
+                                        : {
+                                              id: 'category-pagin',
+                                              itemsPerPage: 5,
+                                              currentPage: page
+                                          }
+                            "
+                        >
+                            <td>{{ cate.id }}</td>
+                            <td scope="col">{{ cate.name }}</td>
+                            <td scope="col">
+                                <div class="product-category-image shadow-lg">
+                                    <img
+                                        [src]="
+                                            'http://localhost:8080/api/v1/prod-category/image/' +
+                                            cate.id
+                                        "
+                                    />
+                                </div>
+                            </td>
+                            <td scope="col">{{ cate.createdAt | date }}</td>
+                            <td scope="col">{{ cate.updatedAt | date }}</td>
+                            <td>
+                                <div class="actions-container">
+                                    <button
+                                        class="btn edit"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#ProductCategoryEdit"
+                                        (click)="edit(cate)"
+                                    >
+                                        <i
+                                            class="fa-solid fa-pen-to-square"
+                                        ></i>
+                                    </button>
+                                    <button
+                                        class="btn delete"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#ProductCategoryDelete"
+                                    >
+                                        <i
+                                            class="fa-sharp fa-solid fa-trash"
+                                        ></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <ng-container *ngSwitchCase="true">
+                <div class="d-flex w-100 mt-5 mb-5 justify-content-center">
+                    <mat-progress-spinner
+                        diameter="50"
+                        mode="indeterminate"
+                    ></mat-progress-spinner>
+                </div>
+            </ng-container>
+        </ng-container>
+    </div>
+    <div class="row">
+        <div *ngIf="!loading" class="row">
+            <div class="col">Showed 0 results</div>
+            <div class="col">
+                <pagination-controls
+                    id="category-pagin"
+                    (pageChange)="page = $event"
+                ></pagination-controls>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Edit Modal -->
+<div
+    class="modal fade"
+    id="ProductCategoryEdit"
+    tabindex="-1"
+    aria-labelledby="ProductCategoryEditLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="ProductCategoryEditLabel">
+                    {{ modalType | titlecase }} Product Category
+                </h1>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                    #closeupdateform
+                ></button>
+            </div>
+            <div class="modal-body">
+                <form
+                    id="updateProdCategoryForm"
+                    [formGroup]="updateForm"
+                    (ngSubmit)="submitForm()"
+                >
+                    <fieldset [disabled]="isSubmitting">
+                        <!-- NAME -->
+                        <div class="update-field-container">
+                            <div>
+                                <h1>Name</h1>
+                            </div>
+                            <mat-form-field>
+                                <mat-label>Category Name</mat-label>
+                                <input
+                                    type="text"
+                                    matInput
+                                    formControlName="name"
+                                />
+                                <mat-error
+                                    *ngIf="
+                                        updateForm.controls['name'].hasError(
+                                            'required'
+                                        )
+                                    "
+                                >
+                                    Name cannot be empty
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="update-field-container">
+                            <div
+                                class="flex-column d-flex justify-content-center"
+                            >
+                                <h1>Image</h1>
+                                <button
+                                    (click)="changeImage()"
+                                    type="button"
+                                    class="btn"
+                                >
+                                    Change Image
+                                </button>
+                            </div>
+                            <div
+                                *ngIf="!files.length && !previewImage"
+                                class="rmpm dropzone"
+                                appDrag
+                                (files)="filesDropped($event)"
+                            >
+                                <div class="text-wrapper">
+                                    <div class="centered">
+                                        Drop your image here!
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="image-preview"
+                                *ngFor="let file of files"
+                            >
+                                <img
+                                    *ngIf="file"
+                                    [src]="file.url"
+                                    width="100px"
+                                    height="100px"
+                                />
+                            </div>
+                            <div *ngIf="previewImage" class="image-preview">
+                                <img
+                                    [src]="previewImage"
+                                    alt="error"
+                                    width="100px"
+                                    height="100px"
+                                />
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button
+                    #closebutton
+                    type="button"
+                    class="btn"
+                    data-bs-dismiss="modal"
+                >
+                    Close
+                </button>
+                <button type="button" (click)="submitForm()" class="btn">
+                    Save changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

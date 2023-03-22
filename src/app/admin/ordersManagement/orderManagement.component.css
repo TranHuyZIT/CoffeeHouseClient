@@ -1,0 +1,112 @@
+.overlay {
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 2;
+}
+
+.overlay__inner {
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+.overlay__content {
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.spinner {
+    width: 75px;
+    height: 75px;
+    display: inline-block;
+    border-width: 2px;
+    border-color: rgba(255, 255, 255, 0.05);
+    border-top-color: #fff;
+    animation: spin 1s infinite linear;
+    border-radius: 100%;
+    border-style: solid;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+.filter-container {
+    display: flex;
+    align-items: flex-start;
+    height: 100px;
+}
+
+.order-card {
+    width: 100%;
+    cursor: pointer;
+}
+.order-card > img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+.order-title-container .first-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.order-title-container h5.price {
+    font-size: 18px;
+}
+.order-title-container .status {
+    background-color: var(--primary);
+    color: white;
+    border-radius: 3px;
+    padding: 4px 8px;
+}
+.order-title-container h5 {
+    margin: 0;
+    text-align: end;
+    padding: 6px 10px;
+    border-radius: 4px;
+    background-color: var(--light-primary);
+    color: white;
+}
+.order-title-container h4 {
+    font-size: 18px;
+}
+.customer-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.customer-image {
+    width: 60px;
+    height: 30px;
+    border-radius: 50%;
+}
+.customer-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.description-field {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.description-field h1 {
+    font-size: 14px;
+    margin: 0;
+    font-weight: 450;
+}
+.description-field p {
+    font-size: 12px;
+    margin: 0;
+    margin-left: 8px;
+}

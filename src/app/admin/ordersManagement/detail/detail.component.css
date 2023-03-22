@@ -1,0 +1,55 @@
+.detail-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.actions-container {
+    display: flex;
+    justify-content: center;
+}
+.btn {
+    font-size: 12px;
+}
+.btn.edit {
+    border: 3px solid white;
+    background-color: var(--light-secondary);
+}
+.btn.delete {
+    border: 3px solid white;
+    background-color: var(--primary);
+}
+
+.btn.edit:hover {
+    color: white;
+    background-color: var(--secondary);
+}
+.btn.delete:hover {
+    color: white;
+    background-color: var(--light-primary);
+}
+.mdc-evolution-chip-set .mdc-evolution-chip {
+    width: fit-content !important;
+    font-size: 12px !important;
+}
+.order-detail-heading {
+    font-size: 35px;
+    font-weight: 550;
+    margin: 24px 0;
+}
+.details-container table {
+    width: 100%;
+}
+.field-container {
+    display: flex;
+    align-items: center;
+}
+.field-container h1 {
+    font-size: 24px;
+    font-weight: 450;
+    margin-right: 6px;
+}
+.mat-mdc-form-field {
+    width: 100%;
+}

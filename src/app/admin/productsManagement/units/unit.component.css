@@ -1,0 +1,24 @@
+#UnitEdit .mat-mdc-form-field {
+    width: 100%;
+}
+
+.btn {
+    font-size: 12px;
+}
+.btn.edit {
+    border: 3px solid white;
+    background-color: var(--light-secondary);
+}
+.btn.delete {
+    border: 3px solid white;
+    background-color: var(--primary);
+}
+
+.btn.edit:hover {
+    color: white;
+    background-color: var(--secondary);
+}
+.btn.delete:hover {
+    color: white;
+    background-color: var(--light-primary);
+}

@@ -1,0 +1,345 @@
+<admin-header></admin-header>
+<main class="accounts-container mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col d-none d-md-block">
+                <h1 class="section-title">ACCOUNT MANAGEMENT</h1>
+            </div>
+            <div class="col">
+                <div class="input-group">
+                    <button
+                        class="btn btn-outline-secondary"
+                        type="button"
+                        id="button-addon1"
+                        (click)="ngOnInit()"
+                    >
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                    <input
+                        [(ngModel)]="name"
+                        type="text"
+                        class="form-control"
+                        placeholder=""
+                    />
+                    <button
+                        (click)="refresh()"
+                        class="btn btn-outline-secondary"
+                    >
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <ng-container [ngSwitch]="loading">
+                <div class="table-responsive" *ngSwitchCase="false">
+                    <table class="table table-striped shadow-lg border">
+                        <thead>
+                            <tr>
+                                <th
+                                    [class.active]="sortBy === 'id'"
+                                    (click)="serSortBy('id')"
+                                    scope="col"
+                                >
+                                    ID <span [hidden]="reverse">▼</span
+                                    ><span [hidden]="!reverse">▲</span>
+                                </th>
+                                <th
+                                    [class.active]="sortBy === 'name'"
+                                    (click)="serSortBy('name')"
+                                    scope="col"
+                                >
+                                    Name <span [hidden]="reverse">▼</span
+                                    ><span [hidden]="!reverse">▲</span>
+                                </th>
+                                <th
+                                    [class.active]="sortBy === 'gender'"
+                                    (click)="serSortBy('gender')"
+                                    scope="col"
+                                >
+                                    Gender <span [hidden]="reverse">▼</span
+                                    ><span [hidden]="!reverse">▲</span>
+                                </th>
+                                <th
+                                    [class.active]="sortBy === 'role'"
+                                    (click)="serSortBy('role')"
+                                    scope="col"
+                                >
+                                    Role <span [hidden]="reverse">▼</span
+                                    ><span [hidden]="!reverse">▲</span>
+                                </th>
+                                <th scope="col">Phone</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                *ngFor="
+                                    let user of usersPaginated
+                                        | paginate
+                                            : {
+                                                  id: 'server',
+                                                  itemsPerPage: pageSize,
+                                                  currentPage: pageNo,
+                                                  totalItems: total
+                                              }
+                                "
+                            >
+                                <td>{{ user.id }}</td>
+                                <td scope="col">{{ user.name }}</td>
+                                <td scope="col">
+                                    {{ user.gender | titlecase }}
+                                </td>
+                                <td scope="col">{{ user.role | titlecase }}</td>
+                                <td scope="col">{{ user.phone }}</td>
+                                <td scope="col">{{ user.email }}</td>
+                                <td>
+                                    <div class="actions-container">
+                                        <button
+                                            (click)="handleEditAccount(user)"
+                                            class="btn edit"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#AccountEdit"
+                                        >
+                                            <i
+                                                class="fa-solid fa-pen-to-square"
+                                            ></i>
+                                        </button>
+                                        <button
+                                            class="btn delete"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#AccountDelete"
+                                            (click)="setSelectedDelete(user)"
+                                        >
+                                            <i
+                                                class="fa-sharp fa-solid fa-trash"
+                                            ></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <ng-container *ngSwitchCase="true">
+                    <div class="d-flex w-100 mt-5 mb-5 justify-content-center">
+                        <mat-progress-spinner
+                            diameter="50"
+                            mode="indeterminate"
+                        ></mat-progress-spinner>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </div>
+        <div *ngIf="!loading" class="row">
+            <div class="col">Showed {{ numberOfResults }} results</div>
+            <div class="col">
+                <pagination-controls
+                    id="server"
+                    (pageChange)="getPage($event)"
+                ></pagination-controls>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!--Edit Modal -->
+<div
+    class="modal fade"
+    id="AccountEdit"
+    tabindex="-1"
+    aria-labelledby="AccountEditLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="AccountEditLabel">
+                    Update Account
+                </h1>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <form
+                    id="updateForm"
+                    [formGroup]="updateForm"
+                    (ngSubmit)="submitForm()"
+                >
+                    <fieldset [disabled]="isSubmitting">
+                        <!-- EMAIL -->
+                        <div class="update-field-container">
+                            <h1>Email</h1>
+                            <mat-form-field>
+                                <mat-label>Email</mat-label>
+                                <input
+                                    type="email"
+                                    matInput
+                                    formControlName="email"
+                                />
+                                <mat-error
+                                    *ngIf="
+                                        updateForm.controls['email'].hasError(
+                                            'required'
+                                        )
+                                    "
+                                >
+                                    Invalid email
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <!-- NAME -->
+                        <div class="update-field-container">
+                            <h1>Name</h1>
+                            <mat-form-field>
+                                <mat-label>Name</mat-label>
+                                <input
+                                    type="text"
+                                    matInput
+                                    formControlName="name"
+                                />
+                                <mat-error
+                                    *ngIf="
+                                        updateForm.controls['name'].hasError(
+                                            'required'
+                                        )
+                                    "
+                                >
+                                    Name cannot be empty
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="update-field-container">
+                            <h1>Gender</h1>
+                            <!-- GENDER -->
+                            <div class="gender-radio-container">
+                                <mat-radio-group formControlName="gender">
+                                    <ng-container
+                                        *ngFor="let enum of Gender | keyvalue"
+                                    >
+                                        <mat-radio-button
+                                            [checked]="
+                                                updateForm.get('gender')
+                                                    ?.value === enum.value
+                                            "
+                                            type="radio"
+                                            formControlName="gender"
+                                            [value]="enum.value"
+                                            >{{ enum.value | titlecase }}
+                                        </mat-radio-button>
+                                    </ng-container>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+                        <div class="update-field-container">
+                            <h1>Role</h1>
+                            <!-- ROLE -->
+                            <mat-form-field appearance="fill">
+                                <mat-label>Role</mat-label>
+                                <mat-select
+                                    formControlName="role"
+                                    [value]="updateForm.get('role')?.value"
+                                >
+                                    <mat-option
+                                        *ngFor="let role of UserRole | keyvalue"
+                                        [value]="role.value"
+                                    >
+                                        {{ role.value | titlecase }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="update-field-container">
+                            <h1>Phone</h1>
+                            <!-- PHONE -->
+                            <mat-form-field>
+                                <mat-label>Phone</mat-label>
+                                <input
+                                    matInput
+                                    type="text"
+                                    formControlName="phone"
+                                />
+                                <mat-error
+                                    *ngIf="
+                                        updateForm.controls['phone'].hasError(
+                                            'required'
+                                        )
+                                    "
+                                >
+                                    Invalid Phone Number
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button
+                    #closebutton
+                    type="button"
+                    class="btn"
+                    data-bs-dismiss="modal"
+                >
+                    Close
+                </button>
+                <button type="button" (click)="submitForm()" class="btn">
+                    Save changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Delete Modal -->
+<div
+    class="modal fade"
+    id="AccountDelete"
+    tabindex="-1"
+    aria-labelledby="AccountDeleteLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="AccountDeleteLabel">
+                    Delete Account
+                </h1>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                Are you sure to delete account
+                <strong>#{{ selectedDelete?.id }}</strong> with account's name:
+                {{ selectedDelete?.name }} ? This will be removed
+                <strong>permanently</strong>.
+            </div>
+            <div class="modal-footer">
+                <button
+                    #closebuttonedit
+                    type="button"
+                    class="btn"
+                    data-bs-dismiss="modal"
+                >
+                    Cancel
+                </button>
+                <button
+                    #closebuttondelete
+                    type="button"
+                    (click)="deleteAccount()"
+                    class="btn delte-btn"
+                >
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

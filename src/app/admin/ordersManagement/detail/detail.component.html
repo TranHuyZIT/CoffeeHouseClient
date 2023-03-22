@@ -1,0 +1,382 @@
+<admin-header></admin-header>
+<main class="detail-container">
+    <div class="container">
+        <div class="row mt-5">
+            <form [formGroup]="updateForm" id="orderInfo">
+                <fieldset>
+                    <div class="row">
+                        <div class="col col-12 col-md-6 field-container">
+                            <h1>Customer</h1>
+                            <mat-form-field>
+                                <mat-label>Customer</mat-label>
+
+                                <mat-select
+                                    formControlName="customerId"
+                                    [value]="
+                                        updateForm.get('customerId')?.value
+                                    "
+                                    (valueChange)="onCustomerChange($event)"
+                                >
+                                    <mat-option>
+                                        <ngx-mat-select-search
+                                            placeholderLabel="Search..."
+                                            noEntriesFoundLabel="No result"
+                                            ngModel
+                                            [ngModelOptions]="{
+                                                standalone: true
+                                            }"
+                                            (ngModelChange)="
+                                                searchTermCustomer$.next($event)
+                                            "
+                                        ></ngx-mat-select-search>
+                                    </mat-option>
+                                    <mat-option
+                                        [value]="customer.id"
+                                        *ngFor="let customer of customerOptions"
+                                    >
+                                        {{ customer.user.name }} #
+                                        {{ customer.id }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col col-12 col-md-6 field-container">
+                            <h1>Delivery Time</h1>
+                            <mat-form-field appearance="fill">
+                                <mat-label>Choose a date</mat-label>
+                                <input
+                                    formControlName="deliveryTime"
+                                    matInput
+                                    [matDatepicker]="picker"
+                                />
+                                <mat-hint>MM/DD/YYYY</mat-hint>
+                                <mat-datepicker-toggle
+                                    matIconSuffix
+                                    [for]="picker"
+                                ></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col col-12">
+                        <div class="field-container">
+                            <h1>Address</h1>
+                            <mat-form-field>
+                                <mat-label>Address</mat-label>
+                                <input
+                                    [value]="
+                                        updateForm.controls['address'].value
+                                    "
+                                    formControlName="address"
+                                    matInput
+                                />
+                                <mat-error
+                                    *ngIf="
+                                        updateForm.controls['address'].hasError(
+                                            'required'
+                                        )
+                                    "
+                                >
+                                    Address cannot be null
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col col-12">
+                        <div class="field-container">
+                            <h1>Note</h1>
+                            <mat-form-field appearance="fill">
+                                <mat-label>Note</mat-label>
+                                <input formControlName="note" matInput />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <div class="row">
+            <div class="col col-12 order-detail-heading">
+                Order Details
+                <button (click)="addRow()" class="btn">Add</button>
+            </div>
+            <div class="col col-12">
+                <div class="details-container">
+                    <div class="table-responsive">
+                        <table class="table table-striped shadow-lg border">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Product</th>
+                                    <th scope="col">Unit</th>
+                                    <th scope="col">Toppings</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    *ngFor="
+                                        let detail of details;
+                                        index as index
+                                    "
+                                >
+                                    <ng-container
+                                        [ngSwitch]="index === editIndex"
+                                    >
+                                        <ng-container *ngSwitchCase="false">
+                                            <td>
+                                                <img
+                                                    class="detail-image"
+                                                    [src]="
+                                                        'http://localhost:8080/api/v1/product/image/' +
+                                                        detail.product.id
+                                                    "
+                                                />
+                                                <span
+                                                    >{{
+                                                        detail.product.name
+                                                            | titlecase
+                                                    }}
+                                                    -
+                                                    {{
+                                                        detail.product.price
+                                                            | currency : 'VND'
+                                                    }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                {{
+                                                    detail.unit.name | titlecase
+                                                }}
+                                                -
+                                                {{
+                                                    detail.unit.price
+                                                        | currency : 'VND'
+                                                }}
+                                            </td>
+                                            <td>
+                                                <mat-chip-listbox
+                                                    class="row flex-wrap justify-content-center"
+                                                >
+                                                    <mat-chip
+                                                        class="col col-12 col-sm-7 col-md-5 col-lg-3"
+                                                        *ngFor="
+                                                            let topping of detail.toppings
+                                                        "
+                                                    >
+                                                        {{
+                                                            topping.name
+                                                                | titlecase
+                                                        }}
+                                                        -
+                                                        {{
+                                                            topping.price
+                                                                | currency
+                                                                    : 'VND'
+                                                        }}
+                                                    </mat-chip>
+                                                </mat-chip-listbox>
+                                            </td>
+                                            <td>
+                                                <div class="actions-container">
+                                                    <button
+                                                        (click)="
+                                                            handleEditDetail(
+                                                                index,
+                                                                detail
+                                                            )
+                                                        "
+                                                        class="btn edit"
+                                                    >
+                                                        <i
+                                                            class="fa-solid fa-pen-to-square"
+                                                        ></i>
+                                                    </button>
+                                                    <button
+                                                        class="btn delete"
+                                                        (click)="
+                                                            deleteRow(index)
+                                                        "
+                                                    >
+                                                        <i
+                                                            class="fa-sharp fa-solid fa-trash"
+                                                        ></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </ng-container>
+                                        <ng-container *ngSwitchCase="true">
+                                            <td>
+                                                <img
+                                                    class="detail-image"
+                                                    [src]="
+                                                        'http://localhost:8080/api/v1/product/image/' +
+                                                        editingDetail.product.id
+                                                    "
+                                                />
+                                                <mat-form-field>
+                                                    <mat-label
+                                                        >Product</mat-label
+                                                    >
+                                                    <mat-select
+                                                        [value]="
+                                                            editingDetail
+                                                                .product.id
+                                                        "
+                                                        (valueChange)="
+                                                            onProductChange(
+                                                                $event
+                                                            )
+                                                        "
+                                                    >
+                                                        <mat-option>
+                                                            <ngx-mat-select-search
+                                                                placeholderLabel="Search..."
+                                                                noEntriesFoundLabel="No Result"
+                                                                ngModel
+                                                                (ngModelChange)="
+                                                                    filterProduct(
+                                                                        $event
+                                                                    )
+                                                                "
+                                                            ></ngx-mat-select-search>
+                                                        </mat-option>
+                                                        <mat-option
+                                                            *ngFor="
+                                                                let product of productOptions
+                                                            "
+                                                            [value]="product.id"
+                                                        >
+                                                            {{ product.name }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </td>
+                                            <td>
+                                                <mat-form-field>
+                                                    <mat-label>Unit</mat-label>
+                                                    <mat-select
+                                                        [value]="
+                                                            editingDetail.unit
+                                                                .id
+                                                        "
+                                                        (valueChange)="
+                                                            onUnitChange($event)
+                                                        "
+                                                    >
+                                                        <mat-option
+                                                            *ngFor="
+                                                                let unit of unitOptions
+                                                            "
+                                                            [value]="unit.id"
+                                                        >
+                                                            {{ unit.name }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </td>
+                                            <td>
+                                                <mat-chip-listbox
+                                                    class="row flex-wrap justify-content-center"
+                                                >
+                                                    <mat-chip
+                                                        class="col col-12 col-sm-7 col-md-5 col-lg-3"
+                                                        (removed)="
+                                                            removeToppingChip(
+                                                                topping.id
+                                                            )
+                                                        "
+                                                        *ngFor="
+                                                            let topping of editingDetail.toppings
+                                                        "
+                                                    >
+                                                        {{
+                                                            topping.name
+                                                                | titlecase
+                                                        }}
+                                                        -
+                                                        {{
+                                                            topping.price
+                                                                | currency
+                                                                    : 'VND'
+                                                        }}
+                                                        <button matChipRemove>
+                                                            <i
+                                                                class="fa-solid fa-xmark"
+                                                            ></i>
+                                                        </button>
+                                                    </mat-chip>
+                                                </mat-chip-listbox>
+                                                <mat-form-field class="row">
+                                                    <mat-label
+                                                        >Toppings</mat-label
+                                                    >
+                                                    <mat-select
+                                                        (valueChange)="
+                                                            addToppingChip(
+                                                                $event
+                                                            )
+                                                        "
+                                                    >
+                                                        <mat-option>
+                                                            <ngx-mat-select-search
+                                                                placeholderLabel="Search..."
+                                                                noEntriesFoundLabel="No Result"
+                                                                ngModel
+                                                                (ngModelChange)="
+                                                                    filterTopping(
+                                                                        $event
+                                                                    )
+                                                                "
+                                                            ></ngx-mat-select-search>
+                                                        </mat-option>
+                                                        <mat-option
+                                                            *ngFor="
+                                                                let topping of toppingOptions
+                                                            "
+                                                            [value]="topping.id"
+                                                        >
+                                                            {{ topping.name }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </td>
+                                            <td>
+                                                <div class="actions-container">
+                                                    <button
+                                                        (click)="saveRow()"
+                                                        class="btn edit"
+                                                    >
+                                                        Save
+                                                    </button>
+                                                    <button
+                                                        class="btn delete"
+                                                        (click)="cancelRow()"
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </ng-container>
+                                    </ng-container>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-end mt-3">
+            <div class="col-2">
+                <button (click)="goBack()" class="btn w-100">
+                    Back
+                    <i class="fa-solid fa-arrow-left-long"></i>
+                </button>
+            </div>
+            <div class="col-2">
+                <button (click)="submitForm()" class="btn w-100">
+                    Save
+                    <i class="fa-solid fa-floppy-disk"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</main>

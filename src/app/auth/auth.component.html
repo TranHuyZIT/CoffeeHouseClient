@@ -1,0 +1,217 @@
+<div class="auth-page vh-100">
+    <div class="container h-100">
+        <div class="row h-100 align-items-center justify-content-center">
+            <div class="col col-lg-6 col-md-8 col-sm-12 mw-100vw">
+                <mat-card>
+                    <mat-card-header>
+                        <mat-card-title>{{ title }}</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <form
+                            id="authForm"
+                            [formGroup]="authForm"
+                            (ngSubmit)="submitForm()"
+                        >
+                            <fieldset [disabled]="isSubmitting">
+                                <!-- USERNAME -->
+                                <mat-form-field>
+                                    <mat-label>Tên Tài Khoản</mat-label>
+                                    <input
+                                        type="text"
+                                        matInput
+                                        formControlName="userName"
+                                    />
+                                    <mat-error
+                                        *ngIf="
+                                            authForm.controls[
+                                                'userName'
+                                            ].hasError('required')
+                                        "
+                                    >
+                                        Tên tài khoản không được trống
+                                    </mat-error>
+                                </mat-form-field>
+                                <!-- PASSWORD -->
+                                <mat-form-field>
+                                    <mat-label>Mật Khẩu</mat-label>
+                                    <input
+                                        (change)="passwordMatchError()"
+                                        type="password"
+                                        matInput
+                                        formControlName="password"
+                                    />
+                                    <mat-error
+                                        *ngIf="
+                                            authForm.controls[
+                                                'password'
+                                            ].hasError('required')
+                                        "
+                                    >
+                                        Mật khẩu không được trống
+                                    </mat-error>
+                                </mat-form-field>
+                                <!-- RETYPE PASSSWORD -->
+                                <mat-form-field *ngIf="authType == 'register'">
+                                    <mat-label>Nhập Lại Mật Khẩu</mat-label>
+                                    <input
+                                        (change)="passwordMatchError()"
+                                        type="password"
+                                        matInput
+                                        formControlName="repassword"
+                                    />
+                                    <mat-error
+                                        *ngIf="
+                                            authForm.controls[
+                                                'repassword'
+                                            ].hasError('notMatched')
+                                        "
+                                    >
+                                        Mật khẩu không khớp
+                                    </mat-error>
+                                </mat-form-field>
+                                <!-- EMAIL -->
+                                <mat-form-field *ngIf="authType == 'register'">
+                                    <mat-label>Email</mat-label>
+                                    <input
+                                        type="email"
+                                        matInput
+                                        formControlName="email"
+                                    />
+                                    <mat-error
+                                        *ngIf="
+                                            authForm.controls['email'].hasError(
+                                                'required'
+                                            ) ||
+                                            authForm.controls['email'].hasError(
+                                                'email'
+                                            )
+                                        "
+                                    >
+                                        {{ getEmailErrorMSG }}
+                                    </mat-error>
+                                </mat-form-field>
+                                <!-- PHONE -->
+                                <mat-form-field *ngIf="authType == 'register'">
+                                    <mat-label>Số Điện Thoại</mat-label>
+                                    <input
+                                        matInput
+                                        type="text"
+                                        formControlName="phone"
+                                    />
+                                    <mat-error
+                                        *ngIf="
+                                            authForm.controls['phone'].hasError(
+                                                'phone'
+                                            ) ||
+                                            authForm.controls['phone'].hasError(
+                                                'required'
+                                            )
+                                        "
+                                    >
+                                        Số điện thoại không hợp lệ
+                                    </mat-error>
+                                </mat-form-field>
+                                <div *ngIf="authType == 'register'">
+                                    <ng-container
+                                        *ngFor="let enum of Gender | keyvalue"
+                                    >
+                                        <mat-radio-button
+                                            [checked]="authForm.get('gender')?.value === enum.value"
+                                            type="radio"
+                                            formControlName="gender"
+                                            [value]="enum.value"
+                                        />
+                                        {{ enum.key }}</ng-container
+                                    >
+                                </div>
+                            </fieldset>
+                        </form>
+                    </mat-card-content>
+                    <mat-card-actions>
+                        <div class="d-flex w-100 justify-content-center">
+                            <mat-card-subtitle>
+                                <button
+                                    [routerLink]="['/login']"
+                                    *ngIf="authType == 'register'"
+                                    mat-button
+                                >
+                                    Đã có tài khoản?
+                                </button>
+                                <button
+                                    [routerLink]="['/register']"
+                                    *ngIf="authType == 'login'"
+                                    mat-button
+                                >
+                                    Chưa có tài khoản?
+                                </button>
+                            </mat-card-subtitle>
+                        </div>
+                        <div class="d-flex w-100 justify-content-center">
+                            <button
+                                mat-raised-button
+                                color="primary"
+                                type="submit"
+                                (click)="submitForm()"
+                                [disabled]="!authForm.valid"
+                            >
+                                {{ title }}
+                            </button>
+                        </div>
+                    </mat-card-actions>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="container page">
+        <div class="row">
+            <div class="col-md-6 offset-md-3 col-xs-12">
+                <h1 class="text-xs-center">{{ title }}</h1>
+                <p class="text-xs-center">
+                    <a [routerLink]="['/login']" *ngIf="authType == 'register'"
+                        >Have an account?</a
+                    >
+                    <a [routerLink]="['/register']" *ngIf="authType == 'login'"
+                        >Need an account?</a
+                    >
+                </p>
+                <app-list-errors [errors]="errors"></app-list-errors>
+                <form (ngSubmit)="submitForm()">
+                    <fieldset [disabled]="isSubmitting">
+                        <fieldset class="form-group">
+                            <input
+                                formControlName="username"
+                                placeholder="Username"
+                                class="form-control form-control-lg"
+                                type="text"
+                            />
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <input
+                                formControlName="password"
+                                placeholder="Password"
+                                class="form-control form-control-lg"
+                                type="password"
+                            />
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <input
+                                formControlName="email"
+                                placeholder="Email"
+                                class="form-control form-control-lg"
+                                type="text"
+                                *ngIf="authType == 'register'"
+                            />
+                        </fieldset>
+                        <button
+                            class="btn btn-lg btn-primary pull-xs-right"
+                            [disabled]="!authForm.valid"
+                            type="submit"
+                        >
+                            {{ title }}
+                        </button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div> -->
+</div>

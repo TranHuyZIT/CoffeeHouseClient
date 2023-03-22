@@ -1,0 +1,17 @@
+.navbar {
+    background-color: var(--home-light-primary) !important;
+}
+.navbar a {
+    color: white !important;
+    font-weight: 550;
+}
+.navbar-brand img {
+    width: 250px;
+    height: 50px;
+    object-fit: cover;
+    filter: brightness(200%);
+}
+.navbar .address h1 {
+}
+.navbar .address p {
+}
