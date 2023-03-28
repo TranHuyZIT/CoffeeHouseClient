@@ -1,0 +1,177 @@
+<home-header></home-header>
+<ng-container [ngSwitch]="loading">
+    <ng-container *ngSwitchCase="true">
+        <div class="d-flex w-100 mt-5 mb-5 justify-content-center">
+            <div class="overlay">
+                <div class="overlay__inner">
+                    <div class="overlay__content">
+                        <span class="spinner"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+    <ng-container *ngSwitchCase="false">
+        <div class="container-md page-container">
+            <div class="detail-container shadow-lg">
+                <div class="row">
+                    <div class="col col-6">
+                        <div class="left-column">
+                            <div class="col col-12">
+                                <div class="image-container">
+                                    <img
+                                        class="product-image"
+                                        [src]="
+                                            'http://localhost:8080/api/v1/product/image/' +
+                                            product.id
+                                        "
+                                    />
+                                </div>
+                            </div>
+                            <div class="col col-12">
+                                <p class="description">
+                                    {{ product.description }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col col-6">
+                        <div class="info-header-container">
+                            <h1 class="text-center">
+                                {{ product.name }}
+                            </h1>
+                            <div class="info-price-amount">
+                                <p>{{ product.price | currency : 'VND' }}</p>
+                                <div class="info-amount">
+                                    <div
+                                        class="btn btn-secondary minus"
+                                        (click)="setAmount(amount - 1)"
+                                    >
+                                        <i class="fa-solid fa-minus"></i>
+                                    </div>
+                                    <span class="amount">{{ amount }}</span>
+                                    <div
+                                        class="btn add"
+                                        (click)="setAmount(amount + 1)"
+                                    >
+                                        <i class="fa-solid fa-plus"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-form-container mt-3">
+                            <div class="input-group mb-3">
+                                <span
+                                    class="input-group-text"
+                                    id="basic-addon1"
+                                >
+                                    <i class="fa-solid fa-note-sticky"></i>
+                                </span>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Ghi Chú"
+                                    aria-label="note"
+                                    aria-describedby="basic-addon1"
+                                />
+                            </div>
+                            <div class="form-header">CHỌN SIZE (BẮT BUỘC)</div>
+                            <div class="form-field-container">
+                                <div class="size-radio-container">
+                                    <mat-radio-group
+                                        (change)="onSelectSize($event)"
+                                    >
+                                        <ng-container
+                                            *ngFor="let size of sizeOptions"
+                                        >
+                                            <mat-radio-button
+                                                [checked]="
+                                                    selectedSizeId == size.id
+                                                "
+                                                type="radio"
+                                                [value]="size.id"
+                                                ><div>
+                                                    {{ size.name | titlecase }}
+                                                </div>
+                                                <div>
+                                                    +
+                                                    {{
+                                                        size.price
+                                                            | currency : 'VND'
+                                                    }}
+                                                </div>
+                                            </mat-radio-button>
+                                        </ng-container>
+                                    </mat-radio-group>
+                                </div>
+                            </div>
+                            <div class="form-header">
+                                CHỌN TOPPING (TÙY CHỌN)
+                            </div>
+                            <div
+                                class="option-topping-container"
+                                *ngFor="let topping of product.productToppings"
+                            >
+                                <div class="option-topping-row mt-1">
+                                    <div class="topping-info">
+                                        <h1>{{ topping.name }}</h1>
+                                        <h2>
+                                            +
+                                            {{
+                                                topping.price | currency : 'VND'
+                                            }}
+                                        </h2>
+                                    </div>
+                                    <div class="topping-amount-control">
+                                        <ng-container
+                                            [ngSwitch]="
+                                                !toppingIds.includes(topping.id)
+                                            "
+                                        >
+                                            <ng-container *ngSwitchCase="true">
+                                                <span>0</span>
+                                                <button
+                                                    (click)="
+                                                        addTopping(topping)
+                                                    "
+                                                    class="btn add-topping"
+                                                >
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                            </ng-container>
+                                            <ng-container *ngSwitchCase="false">
+                                                <span>1</span>
+                                                <button
+                                                    (click)="
+                                                        removeTopping(topping)
+                                                    "
+                                                    class="btn remove-topping"
+                                                >
+                                                    <i class="fa fa-minus"></i>
+                                                </button>
+                                            </ng-container>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="product.productToppings.length <= 0">
+                                <div
+                                    class="form-field-container py-4 text-center"
+                                >
+                                    Sản phẩm này không có topping đi kèm
+                                </div>
+                            </div>
+                        </div>
+                        <button
+                            class="save-button"
+                            [class.disable]="!selectedSizeId"
+                            [disabled]="!selectedSizeId"
+                        >
+                            Thêm vào giỏ hàng
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</ng-container>

@@ -69,17 +69,22 @@
     </button>
 </div>
 <div class="container">
-    <div class="row">
+    <div class="row mt-5">
         <h1 class="text-center">Sản phẩm từ Nhà</h1>
         <ngx-slick-carousel [config]="slideConfig">
             <div
                 ngxSlickItem
-                *ngFor="let cate of categories"
+                *ngFor="let cate of slides"
                 class="category-slide"
             >
                 <div class="cate-card">
                     <div class="image-container">
-                        <img [src]="cate.image" alt="" width="100%" />
+                        <img
+                            (click)="selectCategoryFilter(cate)"
+                            [src]="cate.image"
+                            alt=""
+                            width="100%"
+                        />
                     </div>
                     <div class="name">
                         {{ cate.name | titlecase }}
@@ -87,5 +92,74 @@
                 </div>
             </div>
         </ngx-slick-carousel>
+    </div>
+    <div class="row products-container">
+        <ng-container [ngSwitch]="loading">
+            <ng-container *ngSwitchCase="true" [@ngIf]="'fadeIn'">
+                <div class="d-flex w-100 mt-5 mb-5 justify-content-center">
+                    <div class="overlay">
+                        <div class="overlay__inner">
+                            <div class="overlay__content">
+                                <span class="spinner"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="false" [@ngIf]="'fadeIn'">
+                <div
+                    (click)="navigateToDetail(product.id)"
+                    class="col col-lg-2 col-sm-6 col-md-4"
+                    *ngFor="
+                        let product of products
+                            | paginate
+                                : {
+                                      id: 'products-pagin',
+                                      itemsPerPage: pageSize,
+                                      currentPage: pageNo,
+                                      totalItems: total
+                                  }
+                    "
+                >
+                    <div class="card product-card shadow">
+                        <img
+                            [src]="
+                                'http://localhost:8080/api/v1/product/image/' +
+                                product.id
+                            "
+                            class="card-img-top"
+                            alt="error"
+                        />
+                        <div class="card-body">
+                            <div class="prod-title-container">
+                                <h4>{{ product.name }}</h4>
+                                <div class="title-chip">
+                                    <p class="price">
+                                        {{ product.price | currency : 'VND' }}
+                                    </p>
+                                    <div class="btn add-cart">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ng-container *ngIf="products.length <= 0">
+                    <div class="empty-container">
+                        No Products For This Category Yet!
+                    </div>
+                </ng-container>
+            </ng-container>
+        </ng-container>
+    </div>
+    <div *ngIf="!loading" class="row mt-4">
+        <div class="col">Showed {{ numberOfResults }} results</div>
+        <div class="col">
+            <pagination-controls
+                id="products-pagin"
+                (pageChange)="getPage($event)"
+            ></pagination-controls>
+        </div>
     </div>
 </div>

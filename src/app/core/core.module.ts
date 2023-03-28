@@ -18,6 +18,7 @@ import { UnitService } from './services/unit.service';
 import { CustomerService } from './services/customer.service';
 import { OrderService } from './services/order.service';
 import { RouterModule } from '@angular/router';
+import { CartService } from './services/cart.service';
 
 @NgModule({
     imports: [CommonModule, RouterModule],
@@ -45,6 +46,7 @@ import { RouterModule } from '@angular/router';
         UnitService,
         CustomerService,
         OrderService,
+        CartService,
     ],
     declarations: [],
 })

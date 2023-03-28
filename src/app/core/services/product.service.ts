@@ -13,6 +13,9 @@ export class ProductService {
         private jwtService: JwtService,
         private http: HttpClient
     ) {}
+    getOne(id: string) {
+        return this.apiService.get('/product/' + id);
+    }
     getAll(filters: any) {
         const params = new HttpParams()
             .set('pageNo', filters?.pageNo || '')
