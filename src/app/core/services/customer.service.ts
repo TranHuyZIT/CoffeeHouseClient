@@ -14,4 +14,7 @@ export class CustomerService {
             .set('reverse', !!filters?.reverse);
         return this.apiService.get('/customer', params);
     }
+    getByUserId(id: string) {
+        return this.apiService.get('/customer/' + id);
+    }
 }

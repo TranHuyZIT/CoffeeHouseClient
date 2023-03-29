@@ -95,7 +95,7 @@
     </div>
     <div class="row products-container">
         <ng-container [ngSwitch]="loading">
-            <ng-container *ngSwitchCase="true" [@ngIf]="'fadeIn'">
+            <ng-container *ngSwitchCase="true">
                 <div class="d-flex w-100 mt-5 mb-5 justify-content-center">
                     <div class="overlay">
                         <div class="overlay__inner">
@@ -106,7 +106,7 @@
                     </div>
                 </div>
             </ng-container>
-            <ng-container *ngSwitchCase="false" [@ngIf]="'fadeIn'">
+            <ng-container *ngSwitchCase="false">
                 <div
                     (click)="navigateToDetail(product.id)"
                     class="col col-lg-2 col-sm-6 col-md-4"

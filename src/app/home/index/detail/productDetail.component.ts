@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from 'src/app/core/services/auth.service';
 import { CartService } from 'src/app/core/services/cart.service';
 import { ProductService } from 'src/app/core/services/product.service';
 import { UnitService } from 'src/app/core/services/unit.service';
@@ -19,14 +20,16 @@ export class ProductDetailComponent implements OnInit {
     constructor(
         private productService: ProductService,
         private unitService: UnitService,
-        private route: ActivatedRoute,
+        private activatedRoute: ActivatedRoute,
+        private route: Router,
         private fb: FormBuilder,
         private toastrService: ToastrService,
-        private cartService: CartService
+        private cartService: CartService,
+        private authService: AuthService
     ) {}
 
     ngOnInit(): void {
-        this.slug = this.route.snapshot.paramMap.get('slug');
+        this.slug = this.activatedRoute.snapshot.paramMap.get('slug');
         this.productService.getOne(this.slug || '').subscribe((response) => {
             this.product = response;
             this.loading = false;
@@ -38,12 +41,13 @@ export class ProductDetailComponent implements OnInit {
     }
 
     // Form data
-    amount: number = 0;
+    amount: number = 1;
     sum = 0;
     selectedSizeId: any;
     toppingIds: any[] = [];
+    note: string = '';
     setAmount(newAmount: number) {
-        this.amount = newAmount > 0 ? newAmount : 0;
+        this.amount = newAmount > 1 ? newAmount : 1;
     }
     onSelectSize(event: any) {
         this.selectedSizeId = event.value;
@@ -56,5 +60,29 @@ export class ProductDetailComponent implements OnInit {
         this.toppingIds = this.toppingIds.filter((e) => e != topping.id);
         this.toastrService.info('Xóa topping thành công');
     }
-    addDetail() {}
+    addDetail() {
+        if (!this.selectedSizeId) {
+            this.toastrService.error('Vui lòng chọn size');
+            return;
+        }
+        this.authService.currentCustomer.subscribe((customer) => {
+            this.cartService
+                .addDetail({
+                    productId: this.product.id,
+                    unitId: this.selectedSizeId,
+                    customerId: customer.id,
+                    toppingIds: this.toppingIds,
+                    note: this.note,
+                    soluong: this.amount,
+                })
+                .subscribe((response) => {
+                    if (Object.keys(response).includes('message')) {
+                        this.toastrService.error(response.message);
+                        return;
+                    }
+                    this.toastrService.success('Thêm vào giỏ hàng thành công');
+                    this.route.navigateByUrl('/home');
+                });
+        });
+    }
 }

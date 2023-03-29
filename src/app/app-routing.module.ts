@@ -21,6 +21,11 @@ const routes: Routes = [
                         (m) => m.IndexModule
                     ),
             },
+            {
+                path: 'cart',
+                loadChildren: () =>
+                    import('./home/cart/cart.module').then((m) => m.CartModule),
+            },
         ],
     },
     {

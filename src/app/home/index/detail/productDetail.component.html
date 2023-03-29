@@ -68,6 +68,7 @@
                                     <i class="fa-solid fa-note-sticky"></i>
                                 </span>
                                 <input
+                                    [(ngModel)]="note"
                                     type="text"
                                     class="form-control"
                                     placeholder="Ghi Chú"
@@ -129,7 +130,6 @@
                                             "
                                         >
                                             <ng-container *ngSwitchCase="true">
-                                                <span>0</span>
                                                 <button
                                                     (click)="
                                                         addTopping(topping)
@@ -140,7 +140,6 @@
                                                 </button>
                                             </ng-container>
                                             <ng-container *ngSwitchCase="false">
-                                                <span>1</span>
                                                 <button
                                                     (click)="
                                                         removeTopping(topping)
@@ -163,6 +162,7 @@
                             </div>
                         </div>
                         <button
+                            (click)="addDetail()"
                             class="save-button"
                             [class.disable]="!selectedSizeId"
                             [disabled]="!selectedSizeId"

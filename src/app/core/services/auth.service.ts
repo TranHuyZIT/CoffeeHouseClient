@@ -22,6 +22,7 @@ import UserRole from '../../enum/user-role.enum';
 import AuthenticateRequest from '../../interfaces/user/AuthenticateRequest.interface';
 import UserRegister from '../../interfaces/user/userRegister.interface';
 import UserResponse from '../../interfaces/user/userResponse.interface';
+import { CustomerService } from './customer.service';
 
 @Injectable({
     providedIn: 'root',
@@ -31,6 +32,8 @@ export class AuthService {
     private currentUserSubject = new BehaviorSubject<UserResponse>(
         {} as UserResponse
     );
+    private currentCustomerSubject = new BehaviorSubject<any>({});
+    public currentCustomer = this.currentCustomerSubject.asObservable();
     public currentUser = this.currentUserSubject
         .asObservable()
         .pipe(distinctUntilChanged());
@@ -43,7 +46,8 @@ export class AuthService {
     constructor(
         private apiService: ApiService,
         private jwtService: JwtService,
-        private router: Router
+        private router: Router,
+        private customerService: CustomerService
     ) {}
 
     // Load user info with token in local storage (if any)
@@ -72,6 +76,11 @@ export class AuthService {
         this.isAdminSubject.next(
             user.role === UserRole.ADMIN || user.role === UserRole.SUPERADMIN
         );
+        this.customerService
+            .getByUserId(user.id + '')
+            .subscribe((customerData) => {
+                this.currentCustomerSubject.next(customerData);
+            });
     }
     purgeAuth() {
         this.jwtService.destroyToken();
