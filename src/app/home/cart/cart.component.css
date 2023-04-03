@@ -76,6 +76,16 @@
     border: 3px solid white;
     background-color: var(--home-primary);
 }
+.btn.btn-save {
+    border: 2px solid white;
+    box-sizing: border-box;
+    background-color: var(--home-dark-secondary);
+    transition: opacity 0.1s linear;
+}
+.btn.btn-save:hover {
+    color: white;
+    opacity: 0.9;
+}
 .cart-container {
     width: 100%;
     padding: 24px;

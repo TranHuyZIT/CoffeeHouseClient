@@ -12,6 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import Gender from '../enum/gender.enum';
 import { Errors } from '../interfaces/error.interface';
 import { AuthService } from '../core/services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 @Component({
     selector: 'app-auth-page',
     templateUrl: './auth.component.html',
@@ -29,7 +30,8 @@ export class AuthComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private authService: AuthService,
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        private toastrService: ToastrService
     ) {
         // use FormBuilder to create a form group
         this.authForm = this.fb.group({
@@ -81,6 +83,9 @@ export class AuthComponent implements OnInit {
                 },
                 error(err) {
                     that.errors = err;
+                    console.log(err);
+
+                    that.toastrService.error(err.message);
                     that.isSubmitting = false;
                     if (that.authType === 'login') that.authForm.reset();
                 },

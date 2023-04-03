@@ -1,0 +1,41 @@
+<div class="container">
+    <div class="confirm-container">
+        <div class="row confirm-heading-container">
+            <div class="col col-12">
+                <h1 class="text-center">Xác Nhận Đơn Hàng</h1>
+            </div>
+        </div>
+        <div class="confirm-message-container shadow">
+            <div class="row">
+                <div class="col col-12 justify-content-center row">
+                    <h2 class="text-center">Thông Tin</h2>
+                </div>
+                <h3 class="col col-5 text-center">Địa Chỉ</h3>
+                <div class="col col-7">{{data?.address || ''}}</div>
+                <h3 class="col col-5 text-center">Thời Gian</h3>
+                <div class="col col-7">
+                    {{data?.deliveryTime || '' | date: 'dd/MM/yyyy HH:mm'}}
+                </div>
+                <h3 class="col col-5 text-center">Ghi Chú</h3>
+                <div class="col col-7">{{data?.note || '...'}}</div>
+            </div>
+            <div class="row">
+                <div class="col col-12 text-center text-">
+                    <p>
+                        <em>
+                            Đơn hàng sẽ được xử lý sau khi bạn bấm xác nhận
+                        </em>
+                    </p>
+                </div>
+            </div>
+            <div class="row action-container justify-content-end px-4">
+                <div
+                    class="col col-4 btn confirm"
+                    (click)="data.checkOutCart(); closeDialog();"
+                >
+                    Xác nhận
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

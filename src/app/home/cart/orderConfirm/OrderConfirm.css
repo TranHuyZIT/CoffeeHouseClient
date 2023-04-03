@@ -1,0 +1,30 @@
+.confirm-container {
+    background-color: white;
+    padding: 12px 12px;
+    box-sizing: border-box;
+}
+.confirm-heading-container {
+    background-color: var(--home-primary);
+    box-sizing: border-box;
+    padding: 12px;
+    border-radius: 8px;
+}
+.confirm-heading-container h1 {
+    color: white;
+    margin: 0;
+}
+.confirm-message-container {
+    padding: 12px;
+}
+.confirm-message-container h2 {
+    background-color: var(--home-dark-secondary);
+    color: white;
+    width: 140px;
+    max-width: 100%;
+    border-radius: 12px;
+}
+.btn.confirm {
+    border: 2px solid white;
+    width: 100px;
+    background-color: var(--home-dark-secondary);
+}

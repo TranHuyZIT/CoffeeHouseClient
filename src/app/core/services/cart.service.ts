@@ -14,4 +14,7 @@ export class CartService {
     removeDetail(id: any) {
         return this.apiService.delete('/cart/detail/' + id);
     }
+    checkOutCart(userId: any, body: any) {
+        return this.apiService.post('/cart/checkout/' + userId, body);
+    }
 }

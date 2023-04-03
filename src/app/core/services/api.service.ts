@@ -1,6 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, Injector } from '@angular/core';
 import {
-    HttpHeaders,
     HttpClient,
     HttpParams,
     HttpErrorResponse,
@@ -11,14 +10,15 @@ import { JwtService } from './jwt.service';
 import { ToastrService } from 'ngx-toastr';
 import { catchError, tap } from 'rxjs/operators';
 import config from 'src/app/config/config';
-
+import { NgZone } from '@angular/core';
 @Injectable()
 export class ApiService {
     private baseURL: string = config.ENDPOINT;
     constructor(
+        @Inject(Injector) private readonly injector: Injector,
         private http: HttpClient,
         private jwtService: JwtService,
-        private toastService: ToastrService
+        private toastrService: ToastrService
     ) {}
 
     get(path: string, params: HttpParams = new HttpParams()): Observable<any> {
@@ -47,17 +47,20 @@ export class ApiService {
 
     private handleError(err: HttpErrorResponse): Observable<never> {
         return throwError(() => {
-            if (err.error instanceof Error) {
+            if (err.error && err.error instanceof Error) {
                 // A client-side or network error occurred. Handle it accordingly.
                 console.error('An error occurred:', err.error.message);
-                this.toastService.error(`Có lỗi xảy ra, vui lòng thử lại sau`);
-                throw new Error(`Có lỗi xảy ra, vui lòng thử lại sau`);
+                // throw new Error(`Có lỗi xảy ra, vui lòng thử lại sau`);
             } else {
                 // The backend returned an unsuccessful response code.
                 // The response body may contain clues as to what went wrong,
+                console.log(err);
 
-                throw new Error(`Có lỗi xảy ra: ${err.message}`);
+                throw new Error(err.message);
             }
         });
+    }
+    private get ngZone() {
+        return this.injector.get(NgZone);
     }
 }
