@@ -19,6 +19,7 @@ import { CustomerService } from './services/customer.service';
 import { OrderService } from './services/order.service';
 import { RouterModule } from '@angular/router';
 import { CartService } from './services/cart.service';
+import { PromotionService } from './services/promotion.service';
 
 @NgModule({
     imports: [CommonModule, RouterModule],
@@ -47,6 +48,7 @@ import { CartService } from './services/cart.service';
         CustomerService,
         OrderService,
         CartService,
+        PromotionService,
     ],
     declarations: [],
 })

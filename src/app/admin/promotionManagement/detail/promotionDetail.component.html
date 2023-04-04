@@ -1,0 +1,349 @@
+<div class="container-fluid">
+    <div class="confirm-container">
+        <div class="row confirm-heading-container">
+            <div class="col col-12">
+                <div class="text-center image-container">
+                    <img
+                        src="https://brademar.com/wp-content/uploads/2022/10/The-Coffee-House-Logo-PNG-2.png"
+                    />
+                </div>
+            </div>
+        </div>
+        <div class="content-container shadow">
+            <div class="row">
+                <div class="col col-12 col-sm-6">
+                    <div
+                        class="info-container row justify-content-center"
+                        [formGroup]="form"
+                    >
+                        <div class="form-group col col-12">
+                            <label>Name</label>
+                            <input
+                                type="text"
+                                formControlName="name"
+                                class="form-control"
+                                [ngClass]="{
+                                    'is-invalid':
+                                        submitted && formControls['name'].errors
+                                }"
+                            />
+                            <div
+                                *ngIf="submitted && formControls['name'].errors"
+                                class="invalid-feedback"
+                            >
+                                <div
+                                    *ngIf="
+                                        formControls['name'].errors['required']
+                                    "
+                                >
+                                    Name is required
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col col-6">
+                            <label>Percentage</label>
+                            <input
+                                placeholder="VD: 50%"
+                                type="number"
+                                formControlName="percentage"
+                                class="form-control"
+                                [ngClass]="{
+                                    'is-invalid':
+                                        submitted &&
+                                        formControls['percentage'].errors
+                                }"
+                            />
+                            <div
+                                *ngIf="
+                                    submitted &&
+                                    formControls['percentage'].errors
+                                "
+                                class="invalid-feedback"
+                            >
+                                <div
+                                    *ngIf="
+                                        formControls['percentage'].errors[
+                                            'required'
+                                        ] ||
+                                        formControls['percentage'].errors[
+                                            'isFloat'
+                                        ]
+                                    "
+                                >
+                                    Percentage is not valid
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col col-6">
+                            <label>Limit</label>
+                            <input
+                                placeholder="VD: 100"
+                                type="number"
+                                formControlName="limitNumber"
+                                class="form-control"
+                                [ngClass]="{
+                                    'is-invalid':
+                                        submitted &&
+                                        formControls['limitNumber'].errors
+                                }"
+                            />
+                            <div
+                                *ngIf="
+                                    submitted &&
+                                    formControls['limitNumber'].errors
+                                "
+                                class="invalid-feedback"
+                            >
+                                <div
+                                    *ngIf="
+                                        formControls['limitNumber'].errors[
+                                            'required'
+                                        ] ||
+                                        formControls['limitNumber'].errors[
+                                            'isFloat'
+                                        ]
+                                    "
+                                >
+                                    Limit is not valid
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col col-6">
+                            <label>Choose a date</label>
+                            <div class="input-group">
+                                <input
+                                    type="text"
+                                    formControlName="startDate"
+                                    class="form-control"
+                                    [ngClass]="{
+                                        'is-invalid':
+                                            submitted &&
+                                            formControls['startDate'].errors
+                                    }"
+                                    matInput
+                                    [matDatepicker]="picker"
+                                    readonly
+                                />
+                                <mat-datepicker-toggle
+                                    matIconSuffix
+                                    [for]="picker"
+                                ></mat-datepicker-toggle>
+                                <div
+                                    *ngIf="
+                                        submitted &&
+                                        formControls['startDate'].errors
+                                    "
+                                    class="invalid-feedback"
+                                >
+                                    <div
+                                        *ngIf="formControls['startDate'].errors"
+                                    >
+                                        Start Date is not valid
+                                    </div>
+                                </div>
+
+                                <mat-datepicker #picker></mat-datepicker>
+                            </div>
+                        </div>
+                        <div class="form-group col col-6">
+                            <label>Choose a date</label>
+                            <div class="input-group">
+                                <input
+                                    type="text"
+                                    formControlName="endDate"
+                                    class="form-control"
+                                    [ngClass]="{
+                                        'is-invalid':
+                                            submitted &&
+                                            formControls['endDate'].errors
+                                    }"
+                                    matInput
+                                    [matDatepicker]="pickerEnd"
+                                    readonly
+                                />
+                                <mat-datepicker-toggle
+                                    matIconSuffix
+                                    [for]="pickerEnd"
+                                ></mat-datepicker-toggle>
+                                <div
+                                    *ngIf="
+                                        submitted &&
+                                        formControls['endDate'].errors
+                                    "
+                                    class="invalid-feedback"
+                                >
+                                    <div *ngIf="formControls['endDate'].errors">
+                                        End Date is not valid
+                                    </div>
+                                </div>
+
+                                <mat-datepicker #pickerEnd></mat-datepicker>
+                            </div>
+                        </div>
+                        <div class="form-group col col-6">
+                            <label>Min Order Total</label>
+                            <input
+                                placeholder="VD: 100.0000"
+                                type="number"
+                                formControlName="minOrderTotal"
+                                class="form-control"
+                                [ngClass]="{
+                                    'is-invalid':
+                                        submitted &&
+                                        formControls['minOrderTotal'].errors
+                                }"
+                            />
+                            <div
+                                *ngIf="
+                                    submitted &&
+                                    formControls['minOrderTotal'].errors
+                                "
+                                class="invalid-feedback"
+                            >
+                                <div
+                                    *ngIf="
+                                        formControls['minOrderTotal'].errors[
+                                            'required'
+                                        ]
+                                    "
+                                >
+                                    Minimum order total is not valid
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col col-6">
+                            <label>Max Discount</label>
+                            <input
+                                placeholder="VD: 100"
+                                type="number"
+                                formControlName="maxDiscount"
+                                class="form-control"
+                                [ngClass]="{
+                                    'is-invalid':
+                                        submitted &&
+                                        formControls['maxDiscount'].errors
+                                }"
+                            />
+                            <div
+                                *ngIf="
+                                    submitted &&
+                                    formControls['maxDiscount'].errors
+                                "
+                                class="invalid-feedback"
+                            >
+                                <div
+                                    *ngIf="
+                                        formControls['maxDiscount'].errors[
+                                            'required'
+                                        ]
+                                    "
+                                >
+                                    Max Discount is not valid
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-12 col-sm-6">
+                    <div class="row">
+                        <label>Choose product for voucher</label>
+                        <p>
+                            <em
+                                >Order with all of these products can apply this
+                                voucher</em
+                            >
+                        </p>
+                        <div class="input-group">
+                            <div class="form-control">
+                                <mat-select
+                                    placeholder="Choose product"
+                                    [value]="selectedProduct"
+                                    (valueChange)="onProductChange($event)"
+                                >
+                                    <mat-option>
+                                        <ngx-mat-select-search
+                                            placeholderLabel="Search..."
+                                            noEntriesFoundLabel="No Result"
+                                            ngModel
+                                            (ngModelChange)="
+                                                filterProduct($event)
+                                            "
+                                        ></ngx-mat-select-search>
+                                    </mat-option>
+                                    <mat-option
+                                        *ngFor="let product of productOptions"
+                                        [value]="product.id"
+                                    >
+                                        {{ product.name }}
+                                    </mat-option>
+                                </mat-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-12">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <td>Image</td>
+                                            <td>Product</td>
+                                            <td>Price</td>
+                                            <td></td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            *ngFor="
+                                                let product of productsForTable
+                                            "
+                                        >
+                                            <td>
+                                                <img
+                                                    style="
+                                                        width: 50px;
+                                                        height: 50px;
+                                                    "
+                                                    [src]="
+                                                        'http://localhost:8080/api/v1/product/image/' +
+                                                        product.id
+                                                    "
+                                                />
+                                            </td>
+                                            <td>
+                                                {{ product.name | titlecase }}
+                                            </td>
+                                            <td>
+                                                {{
+                                                    product.price
+                                                        | currency : 'VND'
+                                                }}
+                                            </td>
+                                            <td>
+                                                <button class="btn delete">
+                                                    <i
+                                                        class="fa-solid fa-trash"
+                                                    ></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row action-container justify-content-end px-4">
+                <div
+                    *ngIf="!(data.type == 'view')"
+                    class="col col-4 btn confirm"
+                    (click)="submit()"
+                >
+                    Lưu
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

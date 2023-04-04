@@ -1,2 +1,158 @@
 <admin-header></admin-header>
-<p>promotion works</p>
+<main class="promotion-management-container mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col d-none d-md-block">
+                <h1 class="section-title">PROMOTION MANAGEMENT</h1>
+            </div>
+            <div class="col">
+                <div class="input-group">
+                    <button
+                        (click)="refresh()"
+                        class="btn btn-outline-secondary"
+                    >
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                    </button>
+                    <button (click)="add()" class="btn btn-outline-secondary">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <ng-container [ngSwitch]="loading">
+                <ng-container *ngSwitchCase="true">
+                    <div class="d-flex w-100 mt-5 mb-5 justify-content-center">
+                        <div class="overlay">
+                            <div class="overlay__inner">
+                                <div class="overlay__content">
+                                    <span class="spinner"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="false">
+                    <div
+                        class="col col-lg-3 col-sm-6 col-md-4"
+                        *ngFor="
+                            let promotion of promotions
+                                | paginate
+                                    : {
+                                          id: 'promotions-pagin',
+                                          itemsPerPage: pageSize,
+                                          currentPage: pageNo,
+                                          totalItems: total
+                                      }
+                        "
+                    >
+                        <div
+                            class="card promotion-card shadow"
+                            (click)="selectCard(promotion.id, 'view')"
+                        >
+                            <div class="card-body">
+                                <div class="promotion-title-container">
+                                    <div class="section-container">
+                                        <div class="first-line">
+                                            <p class="price text-bold">
+                                                {{ promotion.name | titlecase }}
+                                            </p>
+                                            <p class="status">
+                                                {{
+                                                    promotion.percentage
+                                                        | percent
+                                                }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="price-container">
+                                            <p>Giảm tối đa:</p>
+                                            <p class="price">
+                                                {{
+                                                    promotion.maxDiscount
+                                                        | currency : 'VND'
+                                                }}
+                                            </p>
+                                        </div>
+                                        <div class="price-container">
+                                            <p>Đơn hàng tối thiểu</p>
+                                            <p class="price">
+                                                {{
+                                                    promotion.minOrderTotal
+                                                        | currency : 'VND'
+                                                }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="section-container">
+                                        <div class="price-container">
+                                            <p>Số lượng</p>
+                                            <p class="price">
+                                                {{ promotion.limitNumber }}
+                                            </p>
+                                        </div>
+                                        <div class="price-container">
+                                            <p>Số lượng còn lại</p>
+                                            <p class="price">
+                                                {{ promotion.remainingNumber }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="section-container">
+                                        <div class="price-container">
+                                            <p>Ngày bắt đầu</p>
+                                            <p class="price">
+                                                {{
+                                                    promotion.startDate
+                                                        | date : 'dd/MM/yyyy'
+                                                }}
+                                            </p>
+                                        </div>
+                                        <div class="price-container">
+                                            <p>Ngày Kết Thúc</p>
+                                            <p class="price">
+                                                {{
+                                                    promotion.endDate
+                                                        | date : 'dd/MM/yyyy'
+                                                }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <a
+                                    href="#"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#ProductEdit"
+                                    class="btn edit"
+                                    (click)="
+                                        selectCard(promotion.id, 'update');
+                                        $event.stopPropagation()
+                                    "
+                                    >Edit</a
+                                >
+                                <a
+                                    href="#"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#PromotionDelete"
+                                    class="btn delete"
+                                    >Delete</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </div>
+        <div *ngIf="!loading" class="row mt-4">
+            <div class="col">Showed {{ numberOfResults }} results</div>
+            <div class="col">
+                <pagination-controls
+                    id="promotions-pagin"
+                    (pageChange)="getPage($event)"
+                ></pagination-controls>
+            </div>
+        </div>
+    </div>
+</main>
