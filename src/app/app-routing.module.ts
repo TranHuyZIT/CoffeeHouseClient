@@ -55,6 +55,14 @@ const routes: Routes = [
                         './admin/ordersManagement/orderManagement.module'
                     ).then((m) => m.OrderManagementModule),
             },
+            {
+                path: 'promotion-mgmt',
+                canActivate: [AdminGuard],
+                loadChildren: () =>
+                    import(
+                        './admin/promotionManagement/promotionManagement.module'
+                    ).then((m) => m.PromotionManagementModule),
+            },
         ],
     },
 ];
