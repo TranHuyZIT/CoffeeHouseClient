@@ -18,15 +18,24 @@ export class HomeHeaderComponent implements OnInit {
     ) {}
     ngOnInit(): void {
         this.authService.currentUser.subscribe((user) => {
+            if (!user) return;
             this.cartService.getCart(user.id + '').subscribe((cartData) => {
                 this.cart = cartData;
                 this.customer = cartData.customer;
-                console.log(this.cart);
             });
         });
     }
     navigateToCart() {
         this.route.navigateByUrl('/home/cart');
+    }
+    navigateToProfile() {
+        this.route.navigateByUrl('/home/profile');
+    }
+    navigateToAdmin() {
+        this.route.navigateByUrl('/admin/product-mgmt');
+    }
+    logOut() {
+        this.authService.purgeAuth();
     }
     cart: any;
     customer: any;

@@ -62,8 +62,8 @@
     flex-direction: column;
     display: flex;
     align-items: center;
-    justify-content: center;
     height: 100%;
+    margin-top: 120px;
 }
 .mdc-evolution-chip-set .mdc-evolution-chip {
     width: fit-content !important;
@@ -101,4 +101,32 @@
 .actions-container {
     display: flex;
     justify-content: center;
+}
+.icon-container i {
+    font-size: 25px;
+    padding: 12px 18px;
+    text-align: center;
+    border: 2px dotted grey;
+    margin-right: 4px;
+}
+.content-container h4 {
+    text-decoration: underline;
+}
+.content-container {
+    padding: 12px;
+}
+.content-container li {
+    list-style-type: disc;
+}
+.percentage-container p {
+    padding: 8px;
+    border-radius: 50%;
+    background-color: black;
+    color: white;
+}
+.voucher-option-container {
+    padding: 0 12px;
+}
+.voucher-option-container.invalid {
+    cursor: default;
 }

@@ -19,12 +19,12 @@ export class AccountService {
             .set('sortBy', sortBy || '')
             .set('pageSize', pageSize || '')
             .set('reverse', !!reverse);
-        return this.apiService.get('/account', params);
+        return this.apiService.get('/admin/account', params);
     }
     updateAccount(id: number, newAccount: any) {
-        return this.apiService.put(`/account/${id}`, newAccount);
+        return this.apiService.put(`/admin/account/${id}`, newAccount);
     }
     deleteAccount(id: number) {
-        return this.apiService.delete(`/account/${id}`);
+        return this.apiService.delete(`/admin/account/${id}`);
     }
 }

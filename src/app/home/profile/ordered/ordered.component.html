@@ -1,0 +1,100 @@
+<div class="row mt-3">
+    <ng-container [ngSwitch]="loading">
+        <ng-container *ngSwitchCase="true">
+            <div class="d-flex w-100 mt-5 mb-5 justify-content-center">
+                <div class="overlay">
+                    <div class="overlay__inner">
+                        <div class="overlay__content">
+                            <span class="spinner"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngSwitchCase="false">
+            <div
+                class="col col-lg-3 col-sm-6 col-md-4"
+                *ngFor="
+                    let order of orders
+                        | paginate
+                            : {
+                                  id: 'orders-pagin',
+                                  itemsPerPage: pageSize,
+                                  currentPage: pageNo,
+                                  totalItems: total
+                              }
+                "
+            >
+                <div class="card order-card shadow">
+                    <img
+                        src="https://theme.hstatic.net/1000075078/1000989727/14/share_fb_home.png?v=49"
+                        class="card-img-top"
+                        alt="error"
+                    />
+                    <div class="card-body">
+                        <div class="order-title-container">
+                            <div>
+                                <div class="first-line">
+                                    <p class="price">
+                                        {{
+                                            order.tongtien || 0
+                                                | currency : 'VND'
+                                        }}
+                                    </p>
+                                    <p class="status">
+                                        {{ order.status | titlecase }}
+                                    </p>
+                                </div>
+                                <div class="customer-container">
+                                    <h5>
+                                        {{
+                                            order?.customer?.user?.name +
+                                                ' # ' +
+                                                order?.customer?.id
+                                        }}
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="description-container">
+                            <div class="description-field">
+                                <h1>ID</h1>
+                                <p class="card-text">#{{ order?.id }}</p>
+                            </div>
+                            <div class="description-field">
+                                <h1>Address</h1>
+                                <p class="card-text">
+                                    {{ order?.address }}
+                                </p>
+                            </div>
+                            <div class="description-field">
+                                <h1>Delivery Time</h1>
+                                <p class="card-text">
+                                    {{
+                                        order?.deliveryTime
+                                            | date : 'hh:mm - dd/MM/yyyy'
+                                    }}
+                                </p>
+                            </div>
+                            <div class="description-field">
+                                <h1>Note</h1>
+                                <p class="card-text">
+                                    {{ order?.note || 'No note given' }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </ng-container>
+</div>
+<div *ngIf="!loading" class="row mt-4">
+    <div class="col">Showed {{ numberOfResults }} results</div>
+    <div class="col">
+        <pagination-controls
+            id="orders-pagin"
+            (pageChange)="getPage($event)"
+        ></pagination-controls>
+    </div>
+</div>

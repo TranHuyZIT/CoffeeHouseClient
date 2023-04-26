@@ -34,7 +34,7 @@ export class ProductCategoryService {
         formData.append('image', image);
         formData.append('name', data.name);
         return this.http
-            .post(`${baseURL}/prod-category`, formData, {
+            .post(`${baseURL}/admin/prod-category`, formData, {
                 headers: headersConfig,
             })
             .pipe(tap(console.log));
@@ -54,7 +54,7 @@ export class ProductCategoryService {
         formData.append('image', image);
         formData.append('name', data.name);
         return this.http
-            .put(`${baseURL}/prod-category/${data.id}`, formData, {
+            .put(`${baseURL}/admin/prod-category/${data.id}`, formData, {
                 headers: headersConfig,
             })
             .pipe(tap(console.log));

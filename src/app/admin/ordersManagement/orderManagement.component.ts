@@ -41,6 +41,7 @@ export class OrderManagementComponent implements OnInit {
         this.ngOnInit();
     }
     getPage(page: number) {
+        this.loading = true;
         this.orderService
             .getAll({
                 pageSize: this.pageSize,
@@ -50,8 +51,7 @@ export class OrderManagementComponent implements OnInit {
                 customerId: this.searchCustomerControl.value,
             })
             .subscribe((response) => {
-                console.log(response);
-
+                this.loading = false;
                 if (Object.keys(response).includes('message')) {
                     this.toastrService.error(response.message);
                     return;

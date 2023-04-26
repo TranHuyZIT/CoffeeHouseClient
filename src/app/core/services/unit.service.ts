@@ -8,9 +8,9 @@ export class UnitService {
         return this.apiService.get('/unit');
     }
     update(id: any, body: any) {
-        return this.apiService.put(`/unit/${id}`, body);
+        return this.apiService.put(`/admin/unit/${id}`, body);
     }
     add(body: any) {
-        return this.apiService.post('/unit', body);
+        return this.apiService.post('/admin/unit', body);
     }
 }

@@ -13,6 +13,7 @@ export class PromotionService {
         private jwtService: JwtService,
         private http: HttpClient
     ) {}
+
     getAll(filters: any) {
         const params = new HttpParams()
             .set('pageNo', filters?.pageNo || '')
@@ -21,13 +22,16 @@ export class PromotionService {
             .set('reverse', !!filters?.reverse);
         return this.apiService.get('/voucher', params);
     }
+    getValidVoucherForCart(userId: any) {
+        return this.apiService.get('/user/voucher/cart/' + userId);
+    }
     getOne(id: any) {
         return this.apiService.get('/voucher/' + id);
     }
     add(body: any) {
-        return this.apiService.post('/voucher', body);
+        return this.apiService.post('/admin/voucher', body);
     }
     update(id: any, body: any) {
-        return this.apiService.put('/voucher/' + id, body);
+        return this.apiService.put('/admin/voucher/' + id, body);
     }
 }

@@ -30,21 +30,24 @@ export class ProductService {
         return this.apiService.get(`/product/image/${id}`);
     }
     add(image: File, data: any) {
-        const headersConfig = new HttpHeaders({}).set(
-            InterceptorSkipHeader,
-            ''
-        );
+        let headersConfig = new HttpHeaders({}).set(InterceptorSkipHeader, '');
         const baseURL: string = config.ENDPOINT;
 
         const token = this.jwtService.getToken();
+
         if (token) {
-            headersConfig.append('Authorization', `Bearer ${token}`);
+            console.log(token);
+            headersConfig = headersConfig.append(
+                'Authorization',
+                `Bearer ${token}`
+            );
         }
         const formData = new FormData();
         formData.append('image', image);
         formData.append('product', JSON.stringify(data));
+        console.log(headersConfig);
 
-        return this.http.post(`${baseURL}/product`, formData, {
+        return this.http.post(`${baseURL}/admin/product`, formData, {
             headers: headersConfig,
         });
     }
@@ -62,7 +65,7 @@ export class ProductService {
         const formData = new FormData();
         if (image) formData.append('image', image);
         formData.append('product', JSON.stringify(data));
-        return this.http.put(`${baseURL}/product/${id}`, formData, {
+        return this.http.put(`${baseURL}/admin/product/${id}`, formData, {
             headers: headersConfig,
         });
     }

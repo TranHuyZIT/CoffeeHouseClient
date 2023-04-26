@@ -16,12 +16,12 @@ export class ToppingService {
         return this.apiSerivce.get('/topping', params);
     }
     add(body: any) {
-        return this.apiSerivce.post('/topping', body);
+        return this.apiSerivce.post('/admin/topping', body);
     }
     update(id: any, body: any) {
-        return this.apiSerivce.put(`/topping/${id}`, body);
+        return this.apiSerivce.put(`/admin/topping/${id}`, body);
     }
     delete(id: any) {
-        return this.apiSerivce.delete(`/topping/${id}`);
+        return this.apiSerivce.delete(`/admin/topping/${id}`);
     }
 }

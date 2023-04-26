@@ -11,6 +11,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
 import { SharedHomeModule } from '../shared/shared.module';
 import { CartRoutingModule } from './cart-routing.module';
@@ -33,6 +34,7 @@ import { OrderConfirmComponent } from './orderConfirm/OrderConfirm.component';
         NgxMatNativeDateModule,
         MatChipsModule,
         MatDialogModule,
+        MatSelectModule,
     ],
     exports: [CartComponent, OrderConfirmComponent],
     declarations: [CartComponent, OrderConfirmComponent],

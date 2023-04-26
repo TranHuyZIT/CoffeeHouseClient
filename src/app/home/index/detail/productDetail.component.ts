@@ -38,9 +38,14 @@ export class ProductDetailComponent implements OnInit {
         this.unitService.getAll().subscribe((response) => {
             this.sizeOptions = response;
         });
+        this.authService.currentCustomer.subscribe(
+            (customer) => (this.customer = customer)
+        );
     }
 
     // Form data
+    submitted = false;
+    customer: any;
     amount: number = 1;
     sum = 0;
     selectedSizeId: any;
@@ -61,28 +66,32 @@ export class ProductDetailComponent implements OnInit {
         this.toastrService.info('Xóa topping thành công');
     }
     addDetail() {
+        if (!this.customer.id) {
+            this.toastrService.error('Vui lòng đăng nhập trước khi đặt hàng');
+            this.route.navigateByUrl('/login');
+            return;
+        }
+        this.submitted = true;
         if (!this.selectedSizeId) {
             this.toastrService.error('Vui lòng chọn size');
             return;
         }
-        this.authService.currentCustomer.subscribe((customer) => {
-            this.cartService
-                .addDetail({
-                    productId: this.product.id,
-                    unitId: this.selectedSizeId,
-                    customerId: customer.id,
-                    toppingIds: this.toppingIds,
-                    note: this.note,
-                    soluong: this.amount,
-                })
-                .subscribe((response) => {
-                    if (Object.keys(response).includes('message')) {
-                        this.toastrService.error(response.message);
-                        return;
-                    }
-                    this.toastrService.success('Thêm vào giỏ hàng thành công');
-                    this.route.navigateByUrl('/home');
-                });
-        });
+        this.cartService
+            .addDetail({
+                productId: this.product.id,
+                unitId: this.selectedSizeId,
+                customerId: this.customer.id,
+                toppingIds: this.toppingIds,
+                note: this.note,
+                soluong: this.amount,
+            })
+            .subscribe((response) => {
+                if (Object.keys(response).includes('message')) {
+                    this.toastrService.error(response.message);
+                    return;
+                }
+                this.toastrService.success('Thêm vào giỏ hàng thành công');
+                this.route.navigateByUrl('/home');
+            });
     }
 }

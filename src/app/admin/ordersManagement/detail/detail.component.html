@@ -82,13 +82,43 @@
                             </mat-form-field>
                         </div>
                     </div>
-                    <div class="col col-12">
-                        <div class="field-container">
-                            <h1>Note</h1>
-                            <mat-form-field appearance="fill">
-                                <mat-label>Note</mat-label>
-                                <input formControlName="note" matInput />
-                            </mat-form-field>
+                    <div class="row">
+                        <div class="col col-8">
+                            <div class="field-container">
+                                <h1>Note</h1>
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Note</mat-label>
+                                    <input formControlName="note" matInput />
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col col-4">
+                            <div class="field-container">
+                                <h1>Status</h1>
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Status</mat-label>
+                                    <mat-select formControlName="status">
+                                        <mat-option
+                                            [value]="enum.key"
+                                            *ngFor="
+                                                let enum of orderStatus
+                                                    | keyvalue
+                                            "
+                                        >
+                                            {{ enum.value }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error
+                                        *ngIf="
+                                            updateForm.controls[
+                                                'status'
+                                            ].hasError('required')
+                                        "
+                                    >
+                                        Status cannot be null
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
                         </div>
                     </div>
                 </fieldset>

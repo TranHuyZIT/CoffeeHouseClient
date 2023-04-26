@@ -1,0 +1,119 @@
+<div class="row">
+    <div class="col col-4 image-update-container">
+        <div *ngIf="previewImage" class="image-preview">
+            <img
+                [src]="previewImage"
+                alt="error"
+                width="100px"
+                height="100px"
+            />
+        </div>
+        <div class="image-preview" *ngFor="let file of files">
+            <img *ngIf="file" [src]="file.url" width="100px" height="100px" />
+        </div>
+        <div
+            *ngIf="!files.length && !previewImage"
+            class="rmpm dropzone"
+            appDrag
+            (files)="filesDropped($event)"
+        >
+            <div class="text-wrapper">
+                <div class="centered">Drop your image here!</div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center">
+            <button (click)="changeImage()" type="button" class="btn">
+                Change Image
+            </button>
+            <button (click)="cancelImage()" type="button" class="btn">
+                Cancel
+            </button>
+        </div>
+    </div>
+    <div class="col col-8 info-update-container">
+        <div class="info-form-container row" [formGroup]="form">
+            <div class="form-group col col-6">
+                <label>FullName</label>
+                <input
+                    formControlName="name"
+                    type="text"
+                    class="form-control"
+                    [ngClass]="{
+                        'is-invalid': submitted && formControls['name'].errors
+                    }"
+                />
+                <div
+                    *ngIf="submitted && formControls['name'].errors"
+                    class="invalid-feedback"
+                >
+                    <div *ngIf="formControls['name'].errors['required']">
+                        Name cannot be empty
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col col-6">
+                <label>Email</label>
+                <input
+                    formControlName="email"
+                    type="text"
+                    class="form-control"
+                    [ngClass]="{
+                        'is-invalid': submitted && formControls['email'].errors
+                    }"
+                />
+                <div
+                    *ngIf="submitted && formControls['email'].errors"
+                    class="invalid-feedback"
+                >
+                    <div *ngIf="formControls['email'].errors['required']">
+                        Email cannot be empty
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col col-6">
+                <label>Phone</label>
+                <input
+                    formControlName="phone"
+                    type="text"
+                    class="form-control"
+                    [ngClass]="{
+                        'is-invalid': submitted && formControls['phone'].errors
+                    }"
+                />
+                <div
+                    *ngIf="submitted && formControls['phone'].errors"
+                    class="invalid-feedback"
+                >
+                    <div *ngIf="formControls['phone'].errors['required']">
+                        Phone cannot be empty
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col col-6">
+                <label>Address</label>
+                <input
+                    formControlName="address"
+                    type="text"
+                    class="form-control"
+                    [ngClass]="{
+                        'is-invalid':
+                            submitted && formControls['address'].errors
+                    }"
+                />
+                <div
+                    *ngIf="submitted && formControls['address'].errors"
+                    class="invalid-feedback"
+                >
+                    <div *ngIf="formControls['address'].errors['required']">
+                        Address cannot be empty
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-end mt-5">
+            <div class="col col-2 d-flex justify-content-end">
+                <button (click)="save()" class="btn">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

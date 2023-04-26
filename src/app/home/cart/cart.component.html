@@ -2,7 +2,7 @@
 
 <ng-container [ngSwitch]="loading">
     <ng-container *ngSwitchCase="true">
-        <div class="d-flex w-100 mt-5 mb-5 justify-content-center">
+        <div class="d-flex w-100 mb-5 justify-content-center">
             <div class="overlay">
                 <div class="overlay__inner">
                     <div class="overlay__content">
@@ -13,7 +13,7 @@
         </div>
     </ng-container>
     <ng-container *ngSwitchCase="false">
-        <div class="container-fluid page-container mt-5">
+        <div class="container-fluid page-container">
             <div class="col col-12 cart-header">
                 <img
                     src="https://brademar.com/wp-content/uploads/2022/10/The-Coffee-House-Logo-PNG-2.png"
@@ -23,7 +23,7 @@
                 <div class="col col-12 mt-3">
                     <div class="customer-container" [formGroup]="form">
                         <h1 class="row">Thông Tin Giao Hàng</h1>
-                        <div class="row">
+                        <div class="row gy-2">
                             <div class="form-group col col-6">
                                 <label>Address</label>
                                 <input
@@ -105,7 +105,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- <button (click)="log()">cdc</button> -->
 
                                 <ngx-mat-datetime-picker
                                     [showSeconds]="false"
@@ -113,18 +112,275 @@
                                 >
                                 </ngx-mat-datetime-picker>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Note</label>
-                            <input
-                                type="text"
-                                formControlName="note"
-                                class="form-control"
-                                [ngClass]="{
-                                    'is-invalid':
-                                        submitted && formControls['note'].errors
-                                }"
-                            />
+                            <div class="form-group col col-6">
+                                <label>Note</label>
+                                <input
+                                    type="text"
+                                    formControlName="note"
+                                    class="form-control"
+                                    [ngClass]="{
+                                        'is-invalid':
+                                            submitted &&
+                                            formControls['note'].errors
+                                    }"
+                                />
+                            </div>
+                            <div class="form-group col col-6">
+                                <ng-container [ngSwitch]="!selectedVoucher">
+                                    <ng-container *ngSwitchCase="true">
+                                        <label
+                                            >Choose Voucher
+                                            <em>(if any)</em></label
+                                        >
+
+                                        <div class="form-control">
+                                            <mat-select
+                                                [value]="
+                                                    formControls['voucherId']
+                                                "
+                                                (valueChange)="
+                                                    selectVoucher($event)
+                                                "
+                                            >
+                                                <mat-option
+                                                    [disabled]="true"
+                                                    value=""
+                                                    *ngIf="
+                                                        validVouchers?.length ==
+                                                            0 &&
+                                                        almostValidVouchers?.length ==
+                                                            0
+                                                    "
+                                                    >Không có voucher nào áp
+                                                    dụng được</mat-option
+                                                >
+                                                <mat-option
+                                                    [value]="option.id"
+                                                    *ngFor="
+                                                        let option of validVouchers
+                                                    "
+                                                >
+                                                    <div
+                                                        class="voucher-option-container d-flex align-items-center"
+                                                    >
+                                                        <div
+                                                            class="icon-container"
+                                                        >
+                                                            <i
+                                                                class="fa-solid fa-tag"
+                                                            ></i>
+                                                        </div>
+                                                        <div
+                                                            class="content-container"
+                                                        >
+                                                            <h4>
+                                                                {{
+                                                                    option.name
+                                                                        | titlecase
+                                                                }}
+                                                            </h4>
+                                                            <div class="ul">
+                                                                <li>
+                                                                    Áp dụng cho
+                                                                    đơn hàng
+                                                                    chứa
+                                                                    <strong>
+                                                                        {{
+                                                                            option
+                                                                                .products
+                                                                                .length
+                                                                        }}
+                                                                    </strong>
+                                                                    sản phẩm:
+                                                                    <em>{{
+                                                                        option.descProd
+                                                                    }}</em>
+                                                                </li>
+                                                                <li>
+                                                                    Tổng đơn
+                                                                    hàng lớn hơn
+                                                                    <em>
+                                                                        {{
+                                                                            option.minOrderTotal
+                                                                                | currency
+                                                                                    : 'VND'
+                                                                        }}
+                                                                    </em>
+                                                                </li>
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            class="percentage-container"
+                                                        >
+                                                            <p
+                                                                class="shadow-lg"
+                                                            >
+                                                                <strong>
+                                                                    {{
+                                                                        option.percentage
+                                                                            | percent
+                                                                    }}
+                                                                </strong>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </mat-option>
+                                                <mat-option
+                                                    [disabled]="true"
+                                                    *ngFor="
+                                                        let option of almostValidVouchers
+                                                    "
+                                                >
+                                                    <div
+                                                        class="voucher-option-container invalid d-flex align-items-center"
+                                                    >
+                                                        <div
+                                                            class="icon-container"
+                                                        >
+                                                            <i
+                                                                class="fa-solid fa-tag"
+                                                            ></i>
+                                                        </div>
+                                                        <div
+                                                            class="content-container"
+                                                        >
+                                                            <h4>
+                                                                {{
+                                                                    option
+                                                                        .voucher
+                                                                        .name
+                                                                        | titlecase
+                                                                }}
+                                                            </h4>
+                                                            <div class="ul">
+                                                                <li>
+                                                                    Bạn còn
+                                                                    thiếu
+                                                                    <strong>
+                                                                        {{
+                                                                            option
+                                                                                .products
+                                                                                .length
+                                                                        }}
+                                                                    </strong>
+                                                                    sản phẩm:
+                                                                    <em>{{
+                                                                        option.descProd
+                                                                    }}</em>
+                                                                    để được áp
+                                                                    dụng
+                                                                </li>
+                                                                <li>
+                                                                    Tổng đơn
+                                                                    hàng lớn hơn
+                                                                    <em>
+                                                                        {{
+                                                                            option
+                                                                                .voucher
+                                                                                .minOrderTotal
+                                                                                | currency
+                                                                                    : 'VND'
+                                                                        }}
+                                                                    </em>
+                                                                </li>
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            class="percentage-container"
+                                                        >
+                                                            <p
+                                                                class="shadow-lg"
+                                                            >
+                                                                <strong>
+                                                                    {{
+                                                                        option
+                                                                            .voucher
+                                                                            .percentage
+                                                                            | percent
+                                                                    }}
+                                                                </strong>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </mat-option>
+                                            </mat-select>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngSwitchCase="false">
+                                        <div
+                                            class="d-flex justify-content-center align-items-center"
+                                        >
+                                            <div
+                                                class="w-100 voucher-option-container shadow justify-content-center rounded d-flex align-items-center"
+                                            >
+                                                <div class="icon-container">
+                                                    <i
+                                                        class="fa-solid fa-tag"
+                                                    ></i>
+                                                </div>
+                                                <div class="content-container">
+                                                    <h4>
+                                                        {{
+                                                            selectedVoucher.name
+                                                                | titlecase
+                                                        }}
+                                                    </h4>
+                                                    <div class="ul">
+                                                        <li>
+                                                            Áp dụng cho đơn hàng
+                                                            chứa
+                                                            <strong>
+                                                                {{
+                                                                    selectedVoucher
+                                                                        .products
+                                                                        .length
+                                                                }}
+                                                            </strong>
+                                                            sản phẩm:
+                                                            <em>{{
+                                                                selectedVoucher.descProd
+                                                            }}</em>
+                                                        </li>
+                                                        <li>
+                                                            Tổng đơn hàng lớn
+                                                            hơn
+                                                            <em>
+                                                                {{
+                                                                    selectedVoucher.minOrderTotal
+                                                                        | currency
+                                                                            : 'VND'
+                                                                }}
+                                                            </em>
+                                                        </li>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="percentage-container"
+                                                >
+                                                    <p class="shadow-lg">
+                                                        <strong>
+                                                            {{
+                                                                selectedVoucher.percentage
+                                                                    | percent
+                                                            }}
+                                                        </strong>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="action-container">
+                                                <button
+                                                    (click)="removeVoucher()"
+                                                    class="btn delete"
+                                                >
+                                                    <i
+                                                        class="fa-solid fa-minus"
+                                                    ></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </ng-container>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -238,9 +494,21 @@
                                         </tr>
                                         <tr>
                                             <th class="text-center" colspan="5">
+                                                Giảm giá
+                                            </th>
+                                            <th colspan="2" class="text-start">
+                                                -
+                                                {{
+                                                    cart.discount
+                                                        | currency : 'VND'
+                                                }}
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-center" colspan="5">
                                                 Tổng cộng
                                             </th>
-                                            <th colspan="2">
+                                            <th colspan="2" class="text-start">
                                                 {{
                                                     cart.tongtien
                                                         | currency : 'VND'
@@ -290,6 +558,7 @@
                             type="button"
                             class="btn btn-secondary"
                             data-bs-dismiss="modal"
+                            #closemodaldelete
                         >
                             Cancel
                         </button>

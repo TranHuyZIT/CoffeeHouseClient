@@ -105,6 +105,12 @@
                                         </ng-container>
                                     </mat-radio-group>
                                 </div>
+                                <div
+                                    *ngIf="submitted && !selectedSizeId"
+                                    class="m-auto text-center"
+                                >
+                                    <mat-error> Vui lòng chọn size </mat-error>
+                                </div>
                             </div>
                             <div class="form-header">
                                 CHỌN TOPPING (TÙY CHỌN)
@@ -161,12 +167,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button
-                            (click)="addDetail()"
-                            class="save-button"
-                            [class.disable]="!selectedSizeId"
-                            [disabled]="!selectedSizeId"
-                        >
+                        <button (click)="addDetail()" class="save-button">
                             Thêm vào giỏ hàng
                         </button>
                     </div>

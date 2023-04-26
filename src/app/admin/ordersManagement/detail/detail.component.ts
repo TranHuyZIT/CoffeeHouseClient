@@ -8,6 +8,7 @@ import { OrderService } from 'src/app/core/services/order.service';
 import { ProductService } from 'src/app/core/services/product.service';
 import { ToppingService } from 'src/app/core/services/topping.service';
 import { UnitService } from 'src/app/core/services/unit.service';
+import OrderStatus from 'src/app/enum/order-status.enum';
 
 @Component({
     templateUrl: './detail.component.html',
@@ -37,6 +38,7 @@ export class DetailOrderComponent implements OnInit {
             note: '',
             voucherId: '',
             customerId: ['', Validators.required],
+            status: ['', Validators.required],
         });
     }
     ngOnInit(): void {
@@ -122,9 +124,8 @@ export class DetailOrderComponent implements OnInit {
                     note: response.note,
                     voucherId: response?.voucher?.id || '',
                     customerId: response?.customer?.id || '',
+                    status: response.status,
                 });
-                console.log(this.updateForm.value);
-
                 this.details = response.details.map((detail: any) => ({
                     product: {
                         id: detail.product.id,
@@ -150,6 +151,7 @@ export class DetailOrderComponent implements OnInit {
     editIndex: number = -1;
     editingDetail: any;
     productSearch = '';
+    orderStatus = OrderStatus;
     filterProduct(search: any) {
         this.searchTermProduct$.next(search);
     }

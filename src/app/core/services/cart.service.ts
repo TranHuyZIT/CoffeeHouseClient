@@ -6,15 +6,26 @@ import { ApiService } from './api.service';
 export class CartService {
     constructor(private apiService: ApiService) {}
     addDetail(body: any) {
-        return this.apiService.post('/cart/detail', body);
+        return this.apiService.post('/user/cart/detail', body);
+    }
+    addVoucherForCart(voucherId: any, customerId: any) {
+        console.log(voucherId);
+
+        return this.apiService.post(
+            '/user/cart/addvoucher/' + customerId,
+            voucherId
+        );
+    }
+    deleteVoucherForCart(customerId: any) {
+        return this.apiService.delete('/user/cart/deletevoucher/' + customerId);
     }
     getCart(customerId: string) {
-        return this.apiService.get('/cart/' + customerId);
+        return this.apiService.get('/user/cart/' + customerId);
     }
     removeDetail(id: any) {
-        return this.apiService.delete('/cart/detail/' + id);
+        return this.apiService.delete('/user/cart/detail/' + id);
     }
     checkOutCart(userId: any, body: any) {
-        return this.apiService.post('/cart/checkout/' + userId, body);
+        return this.apiService.post('/user/cart/checkout/' + userId, body);
     }
 }

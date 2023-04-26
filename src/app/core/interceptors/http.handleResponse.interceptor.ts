@@ -38,9 +38,6 @@ export class HandleResponseInterceptor implements HttpInterceptor {
                     if (event.status === 200) return event.clone();
                 }
                 return event;
-            }),
-            catchError((err) => {
-                return throwError(() => new Error(err.error.message));
             })
         );
     }

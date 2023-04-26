@@ -1,3 +1,4 @@
+/* Spinner Loading */
 .overlay {
     left: 0;
     top: 0;
@@ -9,6 +10,7 @@
 }
 
 .overlay__inner {
+    animation: fade 0.5s;
     left: 0;
     top: 0;
     width: 100%;
@@ -39,11 +41,6 @@
     100% {
         transform: rotate(360deg);
     }
-}
-.filter-container {
-    display: flex;
-    align-items: flex-start;
-    height: 100px;
 }
 
 .order-card {
@@ -83,16 +80,6 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
-}
-.customer-image {
-    width: 60px;
-    height: 30px;
-    border-radius: 50%;
-}
-.customer-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
 }
 .description-field {
     display: flex;
