@@ -54,9 +54,7 @@ export class ApiService {
             } else {
                 // The backend returned an unsuccessful response code.
                 // The response body may contain clues as to what went wrong,
-                console.log(err);
-
-                throw new Error(err.message);
+                throw new Error(err.error.message);
             }
         });
     }
