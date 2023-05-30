@@ -1,0 +1,148 @@
+<div class="container-fluid">
+    <div class="send-code-container rounded">
+        <div class="dialog-header">
+            <h1>Các Mã Voucher!</h1>
+        </div>
+        <div class="dialog-body">
+            <div class="row">
+                <div class="col col-12">
+                    <h2 class="underlined">Thông Tin Voucher</h2>
+                </div>
+                <div class="col col-6">
+                    <div class="info-card card shadow-lg">
+                        <p>
+                            <em>Tỉ lệ giảm</em>:<strong class="emphasized">{{
+                                voucher.percentage | percent
+                            }}</strong>
+                        </p>
+                        <p>
+                            <em>Tên Voucher</em>:<strong>{{
+                                voucher.name
+                            }}</strong>
+                        </p>
+                        <p>
+                            <em>Giảm Tối Đa</em>:
+                            <strong>{{
+                                voucher.maxDiscount | currency : 'VND'
+                            }}</strong>
+                        </p>
+                        <p>
+                            <em>Đơn Hàng Tối Thiểu</em>:
+                            <strong>{{
+                                voucher.minOrderTotal | currency : 'VND'
+                            }}</strong>
+                        </p>
+                    </div>
+                </div>
+                <div class="col col-6">
+                    <div class="info-card card shadow-lg">
+                        <p>
+                            <em>Tổng số lượng</em>:<strong>{{
+                                voucher.limitNumber
+                            }}</strong>
+                        </p>
+                        <p>
+                            <em>Số lượng còn</em>:<strong class="emphasized">{{
+                                voucher.remainingNumber
+                            }}</strong>
+                        </p>
+                        <p>
+                            <em>Ngày Bắt Đầu</em>:
+                            <strong>{{
+                                voucher.startDate | date : 'dd/MM/yyyy'
+                            }}</strong>
+                        </p>
+                        <p>
+                            <em>Ngày Kết Thúc</em>:
+                            <strong>{{
+                                voucher.endDate | date : 'dd/MM/yyyy'
+                            }}</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-12">
+                    <h2 class="underlined">Gửi Voucher Cho Khách</h2>
+                </div>
+                <div class="column-left col col-6">
+                    <mat-form-field>
+                        <mat-label>Customer</mat-label>
+                        <mat-select
+                            formControlName="customerId"
+                            [value]="customer?.id"
+                            (valueChange)="onCustomerChange($event)"
+                        >
+                            <mat-option>
+                                <ngx-mat-select-search
+                                    placeholderLabel="Search Customer..."
+                                    noEntriesFoundLabel="No result"
+                                    ngModel
+                                    [ngModelOptions]="{
+                                        standalone: true
+                                    }"
+                                    (ngModelChange)="
+                                        searchTermCustomer$.next($event)
+                                    "
+                                ></ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option
+                                [value]="customer.id"
+                                *ngFor="let customer of customerOptions"
+                            >
+                                {{ customer.user.name }} #
+                                {{ customer.id }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col col-6">
+                    <ng-container [ngSwitch]="customer != null">
+                        <ng-container *ngSwitchCase="true">
+                            <div clas="customer-info-container d-flex">
+                                <p>
+                                    <em>Tên khách hàng</em>:
+                                    <strong>
+                                        {{ customer.user.name }}
+                                    </strong>
+                                </p>
+                                <p>
+                                    <em>Địa chỉ khách hàng</em>:
+                                    <strong>
+                                        {{ customer.address }}
+                                    </strong>
+                                </p>
+                                <p>
+                                    <em>Email:</em>
+                                    <strong>
+                                        {{ customer.user.email }}
+                                    </strong>
+                                </p>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="false">
+                            <div
+                                class="d-flex justify-content-center align-items-center h-100"
+                            >
+                                <em
+                                    >Vui lòng chọn khách hàng để thấy thông
+                                    tin</em
+                                >
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </div>
+                <div class="col col-12">
+                    <div class="row justify-content-end">
+                        <div class="col col-3">
+                            <a (click)="sendCode()" class="btn edit"
+                                >Gửi Tặng!</a
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-footer"></div>
+    </div>
+</div>

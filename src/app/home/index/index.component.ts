@@ -33,8 +33,8 @@ export class IndexComponent implements OnInit {
             this.categories = response.map((ele: any) => ({
                 ...ele,
                 image:
-                    'http://localhost:8080/api/v1/prod-category/image/' +
-                    ele.id,
+                    'http://localhost:10000/api/v1/image/product_category/' +
+                    ele.image,
             }));
             this.slides = [
                 {

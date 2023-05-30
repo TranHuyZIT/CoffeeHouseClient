@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
@@ -11,6 +11,7 @@ import { SharedAdmin } from '../shared/sharedAdmin.module';
 import { PromotionDetailComponent } from './detail/promotionDetail.component';
 import { PromotionManagementRoutingModule } from './promotionManagement-router.module';
 import { PromotionManagementComponent } from './promotionManagement.component';
+import SendCodeDialog from './sendCodeDialog/SendCodeDialog.component';
 
 @NgModule({
     imports: [
@@ -24,9 +25,18 @@ import { PromotionManagementComponent } from './promotionManagement.component';
         MatDatepickerModule,
         MatNativeDateModule,
         NgxMatSelectSearchModule,
+        MatOptionModule,
         MatSelectModule,
     ],
-    exports: [PromotionManagementComponent, PromotionDetailComponent],
-    declarations: [PromotionManagementComponent, PromotionDetailComponent],
+    exports: [
+        PromotionManagementComponent,
+        PromotionDetailComponent,
+        SendCodeDialog,
+    ],
+    declarations: [
+        PromotionManagementComponent,
+        PromotionDetailComponent,
+        SendCodeDialog,
+    ],
 })
 export class PromotionManagementModule {}

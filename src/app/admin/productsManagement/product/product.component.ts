@@ -101,7 +101,7 @@ export class Product implements OnInit {
         this.getCategories();
         this.getToppings();
         this.previewImage =
-            'http://localhost:8080/api/v1/product/image/' + prod.id;
+            'http://localhost:10000/api/v1/image/product/' + prod.image;
 
         this.updateForm.setValue({
             name: prod.name,

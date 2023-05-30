@@ -11,6 +11,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import Gender from '../enum/gender.enum';
 import { Errors } from '../interfaces/error.interface';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AuthService } from '../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 @Component({
@@ -31,7 +32,8 @@ export class AuthComponent implements OnInit {
         private router: Router,
         private authService: AuthService,
         private fb: FormBuilder,
-        private toastrService: ToastrService
+        private toastrService: ToastrService,
+        private afAuth: AngularFireAuth
     ) {
         // use FormBuilder to create a form group
         this.authForm = this.fb.group({
@@ -68,7 +70,20 @@ export class AuthComponent implements OnInit {
             }
         });
     }
-
+    async loginWithGoogle() {
+        const res = await this.authService.loginWithGoogle();
+        this.afAuth.authState.subscribe((authState) => {
+            console.log(res);
+            authState?.getIdToken().then((token) => console.log(token));
+        });
+    }
+    async loginWithGithub() {
+        const res = await this.authService.loginWithGithub();
+        this.afAuth.authState.subscribe((authState) => {
+            console.log(res);
+            authState?.getIdToken().then((token) => console.log(token));
+        });
+    }
     submitForm() {
         if (this.authForm.valid) {
             const that = this;

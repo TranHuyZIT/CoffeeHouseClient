@@ -6,7 +6,6 @@ import { ApiService } from './services/api.service';
 import { AuthGuard } from './services/auth-guard.service';
 import { JwtService } from './services/jwt.service';
 import { NoAuthGuard } from './services/no-auth-guard';
-import { ToastrService } from 'ngx-toastr';
 import { HandleResponseInterceptor } from './interceptors/http.handleResponse.interceptor';
 import { AuthService } from './services/auth.service';
 import { AdminGuard } from './services/admin-guard.service';
@@ -20,6 +19,8 @@ import { OrderService } from './services/order.service';
 import { RouterModule } from '@angular/router';
 import { CartService } from './services/cart.service';
 import { PromotionService } from './services/promotion.service';
+import { CodeService } from './services/code.service';
+import WebsocketService from './services/webSocket.service';
 
 @NgModule({
     imports: [CommonModule, RouterModule],
@@ -49,6 +50,8 @@ import { PromotionService } from './services/promotion.service';
         OrderService,
         CartService,
         PromotionService,
+        CodeService,
+        WebsocketService,
     ],
     declarations: [],
 })

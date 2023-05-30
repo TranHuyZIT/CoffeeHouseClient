@@ -34,7 +34,7 @@ export class InfoComponent implements OnInit {
         this.authService.currentUser.subscribe((user: any) => {
             this.customerService.getByUserId(user.id).subscribe((customer) => {
                 this.currentCustomer = customer;
-                this.originImage = `http://localhost:8080/api/v1/user/customer/image/${customer.id}`;
+                this.originImage = `http://localhost:10000/api/v1/image/customer/${customer.image}`;
                 this.previewImage = this.originImage;
                 this.form.setValue({
                     email: user.email,

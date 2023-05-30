@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { PromotionService } from 'src/app/core/services/promotion.service';
 import { PromotionDetailComponent } from './detail/promotionDetail.component';
+import SendCodeDialog from './sendCodeDialog/SendCodeDialog.component';
 
 @Component({
     selector: 'admin-promotion',
@@ -10,10 +11,12 @@ import { PromotionDetailComponent } from './detail/promotionDetail.component';
     styleUrls: ['promotionManagement.component.css'],
 })
 export class PromotionManagementComponent implements OnInit {
+    SendCodeDialogRef: any;
     constructor(
         private promotionService: PromotionService,
         private toastrService: ToastrService,
-        private dialogService: MatDialog
+        private dialogService: MatDialog,
+        public dialog: MatDialog
     ) {}
 
     // Rendering page
@@ -23,6 +26,11 @@ export class PromotionManagementComponent implements OnInit {
     }
     refresh() {
         this.ngOnInit();
+    }
+    openDialog(voucherId: any) {
+        this.SendCodeDialogRef = this.dialog.open(SendCodeDialog, {
+            data: { voucherId },
+        });
     }
     add() {
         const dialogRef = this.dialogService.open(PromotionDetailComponent, {

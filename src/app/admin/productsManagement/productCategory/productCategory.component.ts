@@ -116,8 +116,8 @@ export class ProductCategory implements OnInit {
         this.files = [];
         this.modalType = 'update';
         this.previewImage =
-            'http://localhost:8080/api/v1/prod-category/image/' +
-            productCategory.id;
+            'http://localhost:10000/api/v1/image/product_category/' +
+            productCategory.image;
     }
     add() {
         this.files = [];

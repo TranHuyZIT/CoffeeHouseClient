@@ -33,7 +33,6 @@ export class HandleResponseInterceptor implements HttpInterceptor {
         return next.handle(httpRequest).pipe(
             debounceTime(300),
             map((event) => {
-                console.log(event);
                 if (event instanceof HttpResponse) {
                     if (event.status === 200) return event.clone();
                 }

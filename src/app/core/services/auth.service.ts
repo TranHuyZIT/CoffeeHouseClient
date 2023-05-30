@@ -23,7 +23,9 @@ import AuthenticateRequest from '../../interfaces/user/AuthenticateRequest.inter
 import UserRegister from '../../interfaces/user/userRegister.interface';
 import UserResponse from '../../interfaces/user/userResponse.interface';
 import { CustomerService } from './customer.service';
-
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { GoogleAuthProvider, GithubAuthProvider } from '@angular/fire/auth';
+import { ToastrService } from 'ngx-toastr';
 @Injectable({
     providedIn: 'root',
 })
@@ -47,7 +49,9 @@ export class AuthService {
         private apiService: ApiService,
         private jwtService: JwtService,
         private router: Router,
-        private customerService: CustomerService
+        private customerService: CustomerService,
+        private afAuth: AngularFireAuth,
+        private toastrService: ToastrService
     ) {}
 
     // Load user info with token in local storage (if any)
@@ -100,6 +104,24 @@ export class AuthService {
                 return data;
             })
         );
+    }
+    async loginWithGoogle() {
+        try {
+            return this.afAuth.signInWithPopup(new GoogleAuthProvider());
+        } catch (error) {
+            console.log(error);
+            return null;
+            // this.toastrService.error(error.message)
+        }
+    }
+    async loginWithGithub() {
+        try {
+            return this.afAuth.signInWithPopup(new GithubAuthProvider());
+        } catch (error) {
+            console.log(error);
+            return null;
+            // this.toastrService.error(error.message)
+        }
     }
 
     currentUser$ = <Observable<UserResponse>>(

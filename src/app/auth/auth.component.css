@@ -1,3 +1,23 @@
 #authForm .mat-mdc-form-field {
     width: 100%;
 }
+.social-container {
+    padding: 12px;
+}
+.social-container::before {
+    content: '';
+    display: block;
+    border-top: 2px dashed black;
+    width: 50%;
+    margin: auto;
+}
+.social-button {
+    margin-top: 12px;
+    width: 100%;
+}
+.social-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin-right: 8px;
+}

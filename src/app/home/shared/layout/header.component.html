@@ -67,8 +67,8 @@
         <ng-container *ngIf="customer">
             <img
                 [src]="
-                    'http://localhost:8080/api/v1/user/customer/image/' +
-                    customer?.id
+                    'http://localhost:10000/api/v1/image/customer/' +
+                    customer?.image
                 "
             />
         </ng-container>
@@ -91,4 +91,42 @@
             {{ cart?.details.length || 0 }}
         </span>
     </button>
+    <button
+        *appShowAuthed="true"
+        (click)="openNotifications()"
+        type="button"
+        class="btn btn-primary position-relative cart-container"
+    >
+        <i
+            class="bell fa-solid fa-bell"
+            [ngClass]="{ ringing: hasUnreadNotification }"
+        ></i>
+        <span
+            *ngIf="hasUnreadNotification"
+            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+        >
+            &#8203;
+        </span>
+    </button>
+    <ul *ngIf="openNotification" class="dropdown-notification shadow">
+        <ng-container *ngFor="let notification of loadedNotifications">
+            <a class="notification">
+                <div>
+                    <strong>{{ notification.subject }}</strong> -
+                    <em
+                        >{{ notification.createdAt | date : 'hh:mm-dd/MM' }}
+                    </em>
+                </div>
+                <div>
+                    {{ notification.message }}
+                </div>
+            </a>
+        </ng-container>
+        <a
+            *ngIf="!isLastPage"
+            (click)="loadMoreNotifications()"
+            style="cursor: pointer"
+            ><strong style="color: var(--home-primary)">Load More</strong></a
+        >
+    </ul>
 </nav>

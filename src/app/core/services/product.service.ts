@@ -45,7 +45,6 @@ export class ProductService {
         const formData = new FormData();
         formData.append('image', image);
         formData.append('product', JSON.stringify(data));
-        console.log(headersConfig);
 
         return this.http.post(`${baseURL}/admin/product`, formData, {
             headers: headersConfig,

@@ -121,7 +121,7 @@ export class PromotionDetailComponent implements OnInit {
             this.voucherService
                 .add({
                     ...this.form.value,
-                    percentage: this.form.value.percentage / 100,
+                    percentage: this.form.value.percentage,
                     productsId: this.productsForTable.map((e) => e.id),
                 })
                 .subscribe({
@@ -139,7 +139,7 @@ export class PromotionDetailComponent implements OnInit {
             this.voucherService
                 .update(this.data.id, {
                     ...this.form.value,
-                    percentage: this.form.value.percentage / 100,
+                    percentage: this.form.value.percentage,
                     productsId: this.productsForTable.map((e) => e.id),
                 })
                 .subscribe({

@@ -139,6 +139,15 @@
                                     class="btn delete"
                                     >Delete</a
                                 >
+                                <a
+                                    (click)="
+                                        openDialog(promotion.id);
+                                        $event.stopPropagation()
+                                    "
+                                    class="btn send"
+                                >
+                                    Send
+                                </a>
                             </div>
                         </div>
                     </div>

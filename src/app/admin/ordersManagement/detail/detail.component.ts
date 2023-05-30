@@ -69,6 +69,8 @@ export class DetailOrderComponent implements OnInit {
                 this.toastrService.error(response.message);
                 return;
             }
+            console.log(response.content);
+
             this.productOptions = response.content;
         });
     }
@@ -131,6 +133,7 @@ export class DetailOrderComponent implements OnInit {
                         id: detail.product.id,
                         name: detail.product.name,
                         price: detail.product.price,
+                        image: detail.product.image,
                     },
                     toppings: detail.toppings,
                     unit: {

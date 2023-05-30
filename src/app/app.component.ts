@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from './core/services/auth.service';
+import WebsocketService from './core/services/webSocket.service';
 
 @Component({
     selector: 'app-root',
@@ -7,9 +8,13 @@ import { AuthService } from './core/services/auth.service';
     styleUrls: [],
 })
 export class AppComponent implements OnInit {
-    constructor(private authService: AuthService) {}
+    constructor(
+        private authService: AuthService,
+        private webSocketService: WebsocketService
+    ) {}
     ngOnInit(): void {
         this.authService.populate();
+        this.webSocketService.connect();
     }
     title = 'CoffeeHouseTMA';
 }

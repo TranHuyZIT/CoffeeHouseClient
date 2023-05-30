@@ -1,0 +1,37 @@
+.send-code-container {
+    width: 800px;
+    max-width: 100%;
+    padding: 24px;
+}
+.dialog-header {
+    display: flex;
+    justify-content: center;
+}
+.column-left {
+    border-right: 2px solid black;
+}
+.underlined {
+    position: relative;
+    font-weight: 500;
+    margin: 12px 0;
+}
+.underlined::after {
+    position: absolute;
+    margin-top: 4px;
+    left: 5%;
+    content: '';
+    display: block;
+    height: 2px;
+    width: 20%;
+    background-color: var(--home-dark-secondary);
+}
+.info-card {
+    border-radius: 12px;
+    padding: 8px;
+}
+.emphasized {
+    padding: 6px;
+    background-color: red;
+    color: white;
+    border-radius: 2px;
+}
